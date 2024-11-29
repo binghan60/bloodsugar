@@ -56,15 +56,15 @@ function renderCalendar() {
 			cellDiv.innerHTML = `
 				<div class="font-bold text-xl">${cell.date}</div>
 				<!-- 早上 -->
-				<div class="flex flex-col w-full bg-blue-50 p-2 rounded-md mb-2">
-					<div class="font-semibold text-blue-500">早上</div>
-					<div data-type="morningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full"><i class="fa-solid fa-droplet"></i> : ${cell.morning.bloodSugar || '--'}</div>
+				<div class="flex flex-col w-full bg-[#FFEEDD] p-2 rounded-md mb-2">
+					<div class="font-semibold text-[#FF8000] text-center"><i class="fa-regular fa-sun"></i></div>
+					<div data-type="morningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full"><i class="fa-solid fa-droplet w-[14px]"></i> : ${cell.morning.bloodSugar || '--'}</div>
 					<div data-type="morningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full"><i class="fa-solid fa-syringe"></i> : ${cell.morning.insulin || '--'}</div>
 				</div>
 				<!-- 晚上 -->
-				<div class="flex flex-col w-full bg-blue-50 p-2 rounded-md">
-					<div class="font-semibold text-blue-500">晚上</div>
-					<div data-type="eveningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full"><i class="fa-solid fa-droplet"></i> : ${cell.evening.bloodSugar || '--'}</div>
+				<div class="flex flex-col w-full bg-[#ECECFF] p-2 rounded-md">
+					<div class="font-semibold text-[#4A4AFF] text-center"><i class="fa-regular fa-moon"></i></div>
+					<div data-type="eveningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full"><i class="fa-solid fa-droplet w-[14px]"></i> : ${cell.evening.bloodSugar || '--'}</div>
 					<div data-type="eveningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full"><i class="fa-solid fa-syringe"></i> : ${cell.evening.insulin || '--'}</div>
 				</div>`;
 			calendarGrid.appendChild(cellDiv);
@@ -80,7 +80,7 @@ function renderCalendar() {
 						options.forEach((value) => {
 							const option = document.createElement('option');
 							option.value = value;
-							option.textContent = value + ' 小格';
+							option.textContent = value + '小格';
 							if (value === currentValue) {
 								option.selected = true;
 							}
