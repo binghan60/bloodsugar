@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 	res.send('Hello, Express!');
 });
 app.get('/api', (req, res) => {
-	res.json({ message: 'Welcome to the API!' });
+	res.json({ message: '芒果DB' });
 });
 
 const PORT = 3000;
