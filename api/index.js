@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 	res.send('Hello, Express!');
 });
 app.get('/api', (req, res) => {
-	res.send('Hello, Express!');
+	res.send('Hello, API!');
 });
 const PORT = 3000;
 app.listen(PORT, () => {
