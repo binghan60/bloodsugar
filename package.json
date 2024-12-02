@@ -1,10 +1,11 @@
 {
   "name": "bloodsugarhtml",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "./api/index.js",
   "scripts": {
-    "start": "node ./api/index.js",
+    "start": "nodemon ./api/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -12,6 +13,8 @@
   "dependencies": {
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
-    "express": "^4.21.1"
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.3"
   }
 }

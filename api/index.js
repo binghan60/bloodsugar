@@ -1,19 +1,28 @@
-﻿const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const cors = require('cors');
+﻿import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import animalRouter from './routes/animal.js';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
+dotenv.config();
+
+mongoose //連線至資料庫
+	.connect(process.env.MONGODB_URI)
+	.then(() => {
+		console.log('資料庫連線成功');
+	})
+	.catch(() => {
+		console.log('資料庫連線失敗');
+	});
+const app = express();
 // 使用中間件
 app.use(bodyParser.json());
 app.use(cors());
-// 定義首頁路由
+app.use('/animal', animalRouter);
 app.get('/', (req, res) => {
 	res.send('Hello, Express!');
 });
-app.get('/api', (req, res) => {
-	res.json({ message: '芒果DB' });
-});
-
 const PORT = 3000;
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);
