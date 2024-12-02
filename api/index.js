@@ -23,6 +23,9 @@ app.use('/animal', animalRouter);
 app.get('/', (req, res) => {
 	res.send('Hello, Express!');
 });
+app.get('/api', (req, res) => {
+	res.send('Hello, Express!');
+});
 const PORT = 3000;
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);
