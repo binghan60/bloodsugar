@@ -6,6 +6,9 @@ const router = express.Router();
 router.get('/', async (req, res) => {
 	res.send('ANIMAL');
 });
+router.get('/create', async (req, res) => {
+	res.send('ANIMAL');
+});
 
 router.post('/create', async (req, res) => {
 	const newAnimal = new Animal({
