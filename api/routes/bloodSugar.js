@@ -38,20 +38,35 @@ router.post('/create', async (req, res) => {
 		}
 		const existingRecord = await BloodSugar.findOne({
 			userId,
-			date: new Date(),
+			date: new Date(date),
 		});
 		if (existingRecord) {
-			const updateFields = {
-				morning: {
-					bloodSugar: morning.bloodSugar,
-					insulin: morning.insulin,
-				},
-				evening: {
-					bloodSugar: evening.bloodSugar,
-					insulin: evening.insulin,
-				},
-				notes,
-			};
+			let updateFields = {};
+			if (morning.bloodSugar !== undefined && morning.bloodSugar !== '') {
+				updateFields['morning.bloodSugar'] = morning.bloodSugar;
+			}
+			if (morning.insulin !== undefined && morning.insulin !== '') {
+				updateFields['morning.insulin'] = morning.insulin;
+			}
+			if (evening.bloodSugar !== undefined && evening.bloodSugar !== '') {
+				updateFields['evening.bloodSugar'] = evening.bloodSugar;
+			}
+			if (evening.insulin !== undefined && evening.insulin !== '') {
+				updateFields['evening.insulin'] = evening.insulin;
+			}
+			if (notes !== undefined && notes !== '') {
+				updateFields['notes'] = notes;
+			}
+			//////////////////
+			// let updateFields = {};
+			// console.log(morning);
+			// if (morning.bloodSugar) {
+			// 	updateFields.morning.bloodSugar = morning.bloodSugar;
+			// }
+			// if (morning.insulin) {
+			// 	updateFields.morning.insulin = morning.insulin;
+			// }
+			console.log(updateFields);
 			const updatedRecord = await BloodSugar.findOneAndUpdate({ _id: existingRecord._id }, { $set: updateFields }, { new: true });
 			return res.status(200).send(updatedRecord);
 		}
