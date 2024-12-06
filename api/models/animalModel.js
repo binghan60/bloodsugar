@@ -12,7 +12,7 @@ const animalSchema = new mongoose.Schema(
 		variety: { type: String }, // 品種
 		type: {
 			type: String,
-			enum: ['Dog', 'Cat', 'Other'], // 限制動物類型
+			enum: ['dog', 'cat', 'Other'], // 限制動物類型
 			required: true,
 		},
 		gender: {
