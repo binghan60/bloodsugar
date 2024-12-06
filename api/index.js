@@ -2,6 +2,8 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import animalRouter from './routes/animal.js';
+import weightRouter from './routes/weight.js';
+import bloodSugarRouter from './routes/bloodSugar.js';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
@@ -16,14 +18,12 @@ mongoose //連線至資料庫
 		console.log('資料庫連線失敗');
 	});
 const app = express();
-// 使用中間件
 app.use(bodyParser.json());
 app.use(cors());
 app.use('/animal', animalRouter);
+app.use('/weight', weightRouter);
+app.use('/bloodSugar', bloodSugarRouter);
 
-app.get('/', (req, res) => {
-	res.send('Hello, Express!');
-});
 app.get('/api', (req, res) => {
 	res.send('Hello, Express!');
 });
