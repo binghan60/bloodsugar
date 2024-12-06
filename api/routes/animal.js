@@ -29,18 +29,7 @@ router.post('/create', async (req, res) => {
 			ligation: req.body.ligation,
 		});
 		const animal = await newAnimal.save(); //保存至資料庫
-		res.send({
-			//通過驗證回傳帳號資料和token
-			_id: animal._id,
-			name: animal.name,
-			birthday: animal.birthday,
-			bloodType: animal.bloodType,
-			variety: animal.variety,
-			type: animal.type,
-			gender: animal.gender,
-			weight: animal.weight,
-			ligation: animal.ligation,
-		});
+		res.send({ animal });
 	} catch (error) {
 		// 捕獲 Mongoose validation 錯誤
 		console.error(error);
