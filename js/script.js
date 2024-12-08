@@ -81,8 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             },
         },
     });
-    await createCurrentMonthSugarCurve();
-    renderCalendar();
+    await renderCalendar();
 });
 
 async function calendarCells() {
@@ -280,6 +279,7 @@ async function renderCalendar() {
             calendarGrid.appendChild(cellDiv);
         }
     });
+    await createCurrentMonthSugarCurve();
 }
 
 document.getElementById('prevMonth').addEventListener('click', () => {
