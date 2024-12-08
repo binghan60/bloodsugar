@@ -30,7 +30,7 @@
                 </div>
                 <div class="rounded-lg overflow-hidden shadow-lg bg-white p-6 h-full">
                     <h5 class="text-blue-500 text-xl font-bold mb-4">基本資料</h5>
-                    <ul id="profileCard" class="list-none grid grid-cols-2 gap-y-3">
+                    <ul id="profileCard" class="list-none grid grid-cols-2 gap-y-3 pb-3">
                         <li>姓名：</li>
                         <li>種類：</li>
                         <li>生日：</li>
@@ -43,7 +43,6 @@
                     <canvas id="weightChart" class="w-full h-full"></canvas>
                 </div>
             </div>
-
             <!-- 日曆 -->
             <div class="rounded-lg overflow-hidden shadow-lg bg-white mt-6 p-2 lg:p-4">
                 <h1 class="text-center py-3 select-none text-2xl font-bold text-blue-600">
@@ -65,53 +64,46 @@
                     <div>六</div>
                     <div>日</div>
                 </div>
-
                 <div id="calendarGrid" class="grid grid-cols-2 lg:grid-cols-7 gap-1 mt-2">
                     <!-- 日期格子會動態生成 -->
                 </div>
             </div>
-
-            <!-- Chart -->
             <div id="monthChart"></div>
         </div>
-
         <!-- Overlay -->
         <div id="fade" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden">
             <div class="bg-white p-8 rounded-xl shadow-2xl text-center w-3/4 max-w-2xl">
-                <!-- 標題 -->
-                <h2 class="text-xl font-semibold mb-6 text-gray-800">輸入牛奶的時間與血糖值</h2>
-
-                <!-- 輸入欄容器 -->
+                <h2 class="text-xl font-semibold mb-2 text-gray-800">建立血糖曲線</h2>
+                <fieldset class="grid grid-cols-3 gap-4 items-center border p-2 rounded-md shadow-md mb-5">
+                    <legend><h2>日期</h2></legend>
+                    <input id="sugarCurveYear" type="tel" placeholder="血糖曲線年" class="block w-full p-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                    <input id="sugarCurveMonth" type="tel" placeholder="血糖曲線月" class="block w-full p-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                    <input id="sugarCurveDay" type="tel" placeholder="血糖曲線日" class="block w-full p-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                </fieldset>
                 <div class="space-y-4 mb-6" id="input-container">
-                    <!-- 第一組輸入欄位組 -->
                     <div class="grid grid-cols-[2fr_2fr_0.5fr] gap-4 items-center border p-2 rounded-md shadow-md">
-                        <input type="time" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
-                        <input type="number" placeholder="輸入血糖值" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                        <input type="time" name="sugarCurveTime" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                        <input type="number" name="sugarCurveBloodSugar" placeholder="輸入血糖值" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
                         <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md">X</button>
                     </div>
                 </div>
-
-                <!-- 新增欄位按鈕 -->
                 <div class="flex justify-center mb-6">
                     <button id="add-field-btn" class="bg-green-500 hover:bg-green-400 text-white font-medium py-2 px-6 rounded-lg flex items-center shadow-md transition-all"><i class="fa-solid fa-plus mr-2"></i> 新增欄位</button>
                 </div>
-
-                <!-- 底部按鈕 -->
-                <div class="flex justify-between">
+                <div id="sugarCurveBtn" class="flex justify-between">
                     <button class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="document.querySelector('#fade').style.display='none'">取消</button>
                     <button class="bg-blue-500 hover:bg-blue-400 text-white py-2 px-6 rounded-lg shadow-md w-1/3 transition-all">確定</button>
                 </div>
             </div>
         </div>
-
         <div class="fixed right-6 bottom-6 space-y-4">
             <button class="w-14 h-14 rounded-full bg-green-400 text-black shadow-md flex items-center justify-center">
                 <i class="fa-solid fa-plus"></i>
             </button>
-            <!-- <button class="w-14 h-14 rounded-full bg-yellow-200 text-black shadow-md flex items-center justify-center">
-				<i class="fa-regular fa-pen-to-square"></i>
-			</button> -->
-            <button class="w-14 h-14 rounded-full bg-pink-300 text-black shadow-md flex items-center justify-center" onclick="document.querySelector('#fade').style.display='flex'">
+            <button class="w-14 h-14 rounded-full bg-yellow-200 text-black shadow-md flex items-center justify-center">
+                <i class="fa-solid fa-weight-scale"></i>
+            </button>
+            <button class="w-14 h-14 rounded-full bg-pink-300 text-black shadow-md flex items-center justify-center" onclick=" openCreateSugarCurveWindow()">
                 <i class="fa-solid fa-chart-line"></i>
             </button>
         </div>

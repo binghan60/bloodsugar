@@ -37,7 +37,6 @@ router.post('/create', async (req, res) => {
             // 如果是驗證錯誤，返回詳細錯誤信息
             return res.status(400).json({ message: 'Validation Error', errors: error.errors });
         }
-
         // 其他錯誤，返回 500 錯誤
         res.status(500).json({ message: 'Server Error' });
     }
