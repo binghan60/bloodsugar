@@ -343,6 +343,12 @@ async function submitSugarCurve(date) {
     }
     await createCurrentMonthSugarCurve();
     document.querySelector('#fade').style.display = 'none';
+    document.querySelector('#input-container').innerHTML = `
+        <div class="grid grid-cols-[2fr_2fr_0.5fr] gap-4 items-center border p-2 rounded-md shadow-md">
+            <input type="time" name="sugarCurveTime" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+            <input type="number" name="sugarCurveBloodSugar" placeholder="輸入血糖值" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+            <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md">X</button>
+        </div>`;
 }
 
 function openCreateSugarCurveWindow() {
