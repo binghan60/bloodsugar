@@ -1,6 +1,6 @@
 ﻿import express from 'express';
-import BloodSugar from './models/bloodSugarModel.js';
-import BloodSugarCurve from './models/bloodSugarCurveModel.js';
+import BloodSugar from '../../models/bloodSugarModel.js';
+import BloodSugarCurve from '../../models/bloodSugarCurveModel.js';
 import mongoose from 'mongoose';
 const router = express.Router();
 router.get('/diary', async (req, res) => {
