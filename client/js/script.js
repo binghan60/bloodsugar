@@ -378,7 +378,7 @@ document.querySelector('#nextMonth').addEventListener('click', async () => {
     currentDate.dayInMonth = new Date(currentDate.year, currentDate.month + 1, 0).getDate();
     await updateCalendarAndSuagrChart();
 });
-document.querySelector('#sugarCurveinputContainer').addEventListener('click', () => {
+document.querySelector('#addSugarField').addEventListener('click', () => {
     const container = document.querySelector('#sugarCurveinputContainer');
     const newFieldGroup = document.createElement('div');
     newFieldGroup.classList.add('grid', 'grid-cols-[2fr_2fr_0.5fr]', 'gap-4', 'items-center', 'border', 'p-2', 'rounded-md', 'shadow-md');
