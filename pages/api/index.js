@@ -1,9 +1,9 @@
 ﻿import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import animalRouter from './routes/animal.js';
-import weightRouter from './routes/weight.js';
-import bloodSugarRouter from './routes/bloodSugar.js';
+import animalRouter from './animal.js';
+import weightRouter from './weight.js';
+import bloodSugarRouter from './bloodSugar.js';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
