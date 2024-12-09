@@ -1,5 +1,5 @@
 ﻿import express from 'express';
-import Animal from '../../models/animalModel.js';
+import Animal from '../models/animalModel.js';
 
 const router = express.Router();
 

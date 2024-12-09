@@ -1,5 +1,5 @@
 ﻿import express from 'express';
-import Weight from '../../models/weightModel.js';
+import Weight from '../models/weightModel.js';
 import mongoose from 'mongoose';
 
 const router = express.Router();
