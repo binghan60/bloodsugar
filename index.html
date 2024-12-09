@@ -28,21 +28,30 @@
                 <div class="rounded-lg overflow-hidden shadow-lg bg-white h-full">
                     <img class="w-full h-full object-cover" src="image/avatar.png" alt="" />
                 </div>
-                <div class="grid-cols-1 rounded-lg overflow-hidden shadow-lg bg-white p-6 h-full">
-                    <div class="h-full">
-                        <h5 class="text-blue-500 text-xl font-bold mb-4">基本資料</h5>
-                        <ul id="profileCard" class="list-none grid grid-cols-2 gap-y-3 pb-3">
-                            <li>姓名：</li>
-                            <li>種類：</li>
-                            <li>生日：</li>
-                            <li>性別：</li>
-                            <li>血型：</li>
-                            <li>體重：</li>
-                            <li>品種：</li>
-                            <li>結紮：</li>
+                <div class="rounded-lg overflow-hidden shadow-md bg-white p-4 h-auto max-w-md border border-gray-200">
+                    <div>
+                        <h5 class="text-blue-500 text-lg font-semibold mb-3">基本資料</h5>
+                        <ul id="profileCard" class="list-none grid grid-cols-4 gap-x-4 gap-y-3">
+                            <li class="text-gray-600 text-sm font-medium">姓名：</li>
+                            <li class="text-gray-800 text-sm">---</li>
+                            <li class="text-gray-600 text-sm font-medium">種類：</li>
+                            <li class="text-gray-800 text-sm">---</li>
+                            <li class="text-gray-600 text-sm font-medium">生日：</li>
+                            <li class="text-gray-800 text-sm">---</li>
+                            <li class="text-gray-600 text-sm font-medium">性別：</li>
+                            <li class="text-gray-800 text-sm">---</li>
+                            <li class="text-gray-600 text-sm font-medium">血型：</li>
+                            <li class="text-gray-800 text-sm">---</li>
+                            <li class="text-gray-600 text-sm font-medium">體重：</li>
+                            <li class="text-gray-800 text-sm">---</li>
+                            <li class="text-gray-600 text-sm font-medium">品種：</li>
+                            <li class="text-gray-800 text-sm">---</li>
+                            <li class="text-gray-600 text-sm font-medium">結紮：</li>
+                            <li class="text-gray-800 text-sm">---</li>
                         </ul>
                     </div>
                 </div>
+
                 <div class="grid-cols-1 rounded-lg overflow-hidden shadow-lg bg-white p-6 h-full">
                     <div id="weightChart" class="w-full h-full"></div>
                 </div>
@@ -53,7 +62,7 @@
                     <button id="prevMonth" class="text-blue-500 hover:text-blue-700">
                         <i class="fa-solid fa-caret-left text-3xl"></i>
                     </button>
-                    <span id="currentMonth" class="px-4">2024 年 12 月 紀錄表</span>
+                    <span id="calendarTitle" class="px-4">2024 年 12 月 紀錄表</span>
                     <button id="nextMonth" class="text-blue-500 hover:text-blue-700">
                         <i class="fa-solid fa-caret-right text-3xl"></i>
                     </button>
@@ -82,7 +91,7 @@
                     <div class="grid grid-cols-2 gap-4 items-center border p-2 rounded-md shadow-md">
                         <input id="quickRecordSuagr" placeholder="請輸入血糖值" type="tel" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
                         <select id="quickRecordInsulin" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-                            <option value="">請選擇胰島素</option>
+                            <option value="">不修改</option>
                             <option value="0">0</option>
                             <option value="0.5">0.5</option>
                             <option value="1">1</option>
