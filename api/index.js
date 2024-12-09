@@ -1,9 +1,9 @@
 ﻿import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import animalRouter from './animal.js';
-import weightRouter from './weight.js';
-import bloodSugarRouter from './bloodSugar.js';
+import animalRouter from './routes/animal.js';
+import weightRouter from './routes/weight.js';
+import bloodSugarRouter from './routes/bloodSugar.js';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
@@ -18,19 +18,16 @@ mongoose //連線至資料庫
         console.log(err.message);
     });
 const app = express();
+app.get('/api', (req, res) => {
+    res.send('Hello, API!');
+});
 app.use(bodyParser.json());
 app.use(cors());
-app.use('/animal', animalRouter);
-app.use('/weight', weightRouter);
-app.use('/bloodSugar', bloodSugarRouter);
+app.use('/api/animal', animalRouter);
+app.use('/api/weight', weightRouter);
+app.use('/api/bloodSugar', bloodSugarRouter);
 
-app.get('/api', (req, res) => {
-    res.send('Hello, Express!');
-});
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-export default (req, res) => {
-    app(req, res);
-};
