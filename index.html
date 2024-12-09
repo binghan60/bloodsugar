@@ -40,7 +40,7 @@
                         <li>品種：</li>
                         <li>結紮：</li>
                     </ul>
-                    <canvas id="weightChart" class="w-full h-full"></canvas>
+                    <div id="weightChart" class="w-full h-full"></div>
                 </div>
             </div>
             <!-- 日曆 -->
@@ -69,6 +69,23 @@
                 </div>
             </div>
             <div id="monthChart"></div>
+        </div>
+        <!-- 體重視窗 -->
+        <div id="weightFade" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden">
+            <div class="bg-white p-8 rounded-xl shadow-2xl text-center w-3/4 max-w-2xl">
+                <h2 class="text-xl font-semibold mb-2 text-gray-800">新增體重紀錄</h2>
+
+                <div class="space-y-4 mb-6" id="input-container">
+                    <div class="grid grid-cols-2 gap-4 items-center border p-2 rounded-md shadow-md">
+                        <input id="weightDate" type="date" name="sugarCurveTime" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                        <input id="weightValue" type="number" name="sugarCurveBloodSugar" placeholder="輸入體重" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                    </div>
+                </div>
+                <div id="weightBtn" class="flex justify-between">
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="document.querySelector('#weightFade').style.display='none'">取消</button>
+                    <button class="bg-blue-500 hover:bg-blue-400 text-white py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="submitWeight()">確定</button>
+                </div>
+            </div>
         </div>
         <!-- Overlay -->
         <div id="fade" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden">
@@ -100,7 +117,7 @@
             <button class="w-14 h-14 rounded-full bg-green-400 text-black shadow-md flex items-center justify-center">
                 <i class="fa-solid fa-plus"></i>
             </button>
-            <button class="w-14 h-14 rounded-full bg-yellow-200 text-black shadow-md flex items-center justify-center">
+            <button class="w-14 h-14 rounded-full bg-yellow-200 text-black shadow-md flex items-center justify-center" onclick="openCreateWeightWindow()">
                 <i class="fa-solid fa-weight-scale"></i>
             </button>
             <button class="w-14 h-14 rounded-full bg-pink-300 text-black shadow-md flex items-center justify-center" onclick=" openCreateSugarCurveWindow()">
