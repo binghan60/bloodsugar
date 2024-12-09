@@ -3,10 +3,6 @@
         {
             "src": "/api/(.*)",
             "dest": "/api/index.js"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/public/index.html"
         }
     ]
 }
