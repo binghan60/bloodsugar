@@ -23,11 +23,13 @@ app.get('/api', (req, res) => {
 });
 app.use(bodyParser.json());
 app.use(cors());
-app.use('/api/animal', animalRouter);
-app.use('/api/weight', weightRouter);
-app.use('/api/bloodSugar', bloodSugarRouter);
+app.use('/animal', animalRouter);
+app.use('/weight', weightRouter);
+app.use('/bloodSugar', bloodSugarRouter);
 
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+export default app;
