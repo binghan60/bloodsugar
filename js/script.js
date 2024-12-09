@@ -16,76 +16,24 @@ const spaceDay = () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const animalProfile = await getAnimalProfile();
+    const detailBirthday = calculateAgeWithMonths(animalProfile.birthday);
+    console.log(detailBirthday);
     document.querySelector('#profileCard').innerHTML = `
 		<li>姓名：${animalProfile.name}</li>
 		<li>種類：<i class="fa-solid fa-${animalProfile.type}"></i></li>
-		<li>生日：${new Date(animalProfile.birthday).toLocaleString().slice(0, 8)}</li>
+		<li>生日：${new Date(animalProfile.birthday).toLocaleString().slice(0, 8)}(${detailBirthday.years}歲${detailBirthday.months}個月)</li>
 		<li>性別：${animalProfile.gender == 'Male' ? `<i class="fa-solid fa-mars text-blue-600"></i>` : `<i class="fa-solid fa-venus"></i>`}</li>
 		<li>血型：${animalProfile.bloodType} 型</li>
 		<li>體重：${animalProfile.weight}公斤</li>
 		<li>品種：${animalProfile.variety}</li>
 		<li>結紮：${animalProfile.ligation ? `<i class="fa-solid fa-check"></i>` : `<i class="fa-solid fa-x"></i>`}</li>`;
-    const weight = await getAnimalWeight();
-    const datesArray = weight.map((item) => {
-        const date = new Date(item.date);
-        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-    });
-    const weightArray = weight.map((x) => x.weight);
-    const maxWeight = Math.max(...weightArray);
-    const ctx = document.querySelector('#weightChart');
-    const myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: datesArray,
-            datasets: [
-                {
-                    label: '體重',
-                    data: weightArray,
-                    borderColor: 'rgb(147, 197, 253)',
-                    backgroundColor: 'rgba(147, 197, 253, 0.6)',
-                    tension: 0,
-                    pointRadius: 8,
-                    pointHoverRadius: 15,
-                },
-            ],
-        },
-        plugins: [ChartDataLabels],
-        options: {
-            responsive: true,
-            // maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false,
-                    position: 'top',
-                },
-                datalabels: {
-                    display: true,
-                    color: '#0080FF',
-                    font: {
-                        weight: 'bold',
-                        size: 16,
-                    },
-                    align: 'top',
-                    formatter: (value) => value.toFixed(1),
-                },
-            },
-            scales: {
-                y: {
-                    title: {
-                        display: true,
-                        text: '體重(公斤)',
-                    },
-                    beginAtZero: false,
-                    max: maxWeight * 1.01,
-                },
-            },
-        },
-    });
+
+    await updateWightChart();
     await renderCalendar();
 });
 
 async function calendarCells() {
-    const diaryData = await getDiaryData(); // 获取日记数据
+    const diaryData = await getDiaryData();
     // 构建 days 数据，包含所有日期的默认值
     const days = Array.from({ length: currentDate.dayInMonth }, (_, i) => {
         const formattedDate = `${currentDate.year}-${String(currentDate.month + 1).padStart(2, '0')}-${String(i + 1).padStart(2, '0')}`;
@@ -125,6 +73,17 @@ async function calendarCells() {
         allDays.push({ date: null });
     }
     return allDays;
+}
+function calculateAgeWithMonths(birthDayString) {
+    const today = new Date();
+    const birth = new Date(birthDayString);
+    let years = today.getFullYear() - birth.getFullYear();
+    let months = today.getMonth() - birth.getMonth();
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+    return { years, months };
 }
 
 async function renderCalendar() {
@@ -334,12 +293,10 @@ async function submitSugarCurve(date) {
         time: time,
         value: sugarArray[index],
     }));
-
-    console.log({ records });
     const createSugarCurveResponse = await createSugarCurve(date, records);
-    console.log(createSugarCurveResponse);
     if (!createSugarCurveResponse._id) {
         alert('新增失敗');
+        return;
     }
     await createCurrentMonthSugarCurve();
     document.querySelector('#fade').style.display = 'none';
@@ -349,6 +306,31 @@ async function submitSugarCurve(date) {
             <input type="number" name="sugarCurveBloodSugar" placeholder="輸入血糖值" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
             <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md">X</button>
         </div>`;
+}
+async function submitWeight() {
+    const date = document.querySelector('#weightDate').value;
+    const weight = document.querySelector('#weightValue').value;
+
+    if (!date || !weight) {
+        alert('請輸入完整資訊');
+        return;
+    }
+    const createWeightResponse = await createWeight(date, weight);
+    if (!createWeightResponse._id) {
+        alert('體重新增失敗');
+        return;
+    }
+    await updateWightChart();
+    document.querySelector('#weightFade').style.display = 'none';
+    document.querySelector('#weightDate').value = '';
+    document.querySelector('#weightValue').value = '';
+    console.log(createWeightResponse);
+}
+function openCreateWeightWindow() {
+    document.querySelector('#weightBtn').innerHTML = `
+		<button class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="document.querySelector('#weightFade').style.display='none'">取消</button>
+        <button class="bg-blue-500 hover:bg-blue-400 text-white py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="submitWeight()">確定</button>`;
+    document.querySelector('#weightFade').style.display = 'flex';
 }
 
 function openCreateSugarCurveWindow() {
@@ -381,7 +363,6 @@ async function createCurrentMonthSugarCurve() {
         const timeArray = data.records.map((x) => x.time);
         const sugarArray = data.records.map((x) => x.value * 1);
         const chartDate = new Date(data.date).toLocaleString().slice(0, 10);
-        console.log(chartDate);
         new Chart(canvas, {
             type: 'line',
             data: {
@@ -426,7 +407,7 @@ async function createCurrentMonthSugarCurve() {
                     y: {
                         title: {
                             display: true,
-                            text: '體重',
+                            text: '血糖值',
                         },
                         beginAtZero: false,
                         max: Math.max(...sugarArray) * 1.1,
@@ -434,6 +415,69 @@ async function createCurrentMonthSugarCurve() {
                 },
             },
         });
+    });
+}
+async function updateWightChart() {
+    const weight = await getAnimalWeight();
+    const datesArray = weight.map((item) => {
+        const date = new Date(item.date);
+        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    });
+    const weightArray = weight.map((x) => x.weight);
+    const maxWeight = Math.max(...weightArray);
+    const container = document.querySelector('#weightChart');
+    container.innerHTML = '';
+    const canvas = document.createElement('canvas');
+    canvas.width = '100%';
+    canvas.height = '100%';
+    container.appendChild(canvas);
+    const myChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: datesArray,
+            datasets: [
+                {
+                    label: '體重',
+                    data: weightArray,
+                    borderColor: 'rgb(147, 197, 253)',
+                    backgroundColor: 'rgba(147, 197, 253, 0.6)',
+                    tension: 0,
+                    pointRadius: 8,
+                    pointHoverRadius: 15,
+                },
+            ],
+        },
+        plugins: [ChartDataLabels],
+        options: {
+            responsive: true,
+            // maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                    position: 'top',
+                },
+                datalabels: {
+                    display: true,
+                    color: '#0080FF',
+                    font: {
+                        weight: 'bold',
+                        size: 16,
+                    },
+                    align: 'top',
+                    formatter: (value) => value.toFixed(1),
+                },
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: '體重(公斤)',
+                    },
+                    beginAtZero: false,
+                    max: maxWeight * 1.01,
+                },
+            },
+        },
     });
 }
 
@@ -548,6 +592,32 @@ async function createSugarCurve(date, records) {
                 userId: animalId,
                 date,
                 records,
+            }),
+        });
+        if (!response.ok) {
+            throw new Error(`Request failed with status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        alert('伺服器忙碌中，請稍後再試。');
+        console.error('createDiaryData', error);
+        throw error;
+    }
+}
+
+async function createWeight(date, weight) {
+    try {
+        const response = await fetch(`${apipath}/weight/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: animalId,
+                date,
+                weight,
             }),
         });
         if (!response.ok) {
