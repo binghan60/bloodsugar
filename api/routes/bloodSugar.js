@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 const router = express.Router();
 router.get('/diary', async (req, res) => {
     const { id, year, month, dayInMonth } = req.query;
-    console.log(req.query);
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).send({ error: 'Invalid user ID' });
     }
@@ -15,8 +14,6 @@ router.get('/diary', async (req, res) => {
     try {
         const startDate = new Date(`${year}-${month}-01`);
         const endDate = new Date(`${year}-${month}-${dayInMonth}`);
-        console.log(startDate);
-        console.log(endDate);
         const data = await BloodSugar.find({
             userId: id,
             date: { $gte: startDate, $lte: endDate },
@@ -97,7 +94,6 @@ router.post('/create', async (req, res) => {
 });
 router.get('/getCurve', async (req, res) => {
     const { userId, year, month } = req.query;
-    console.log(req.query);
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ message: 'Invalid userId' });
     }
@@ -105,13 +101,10 @@ router.get('/getCurve', async (req, res) => {
         const dayInMonth = new Date(year, month, 0).getDate();
         const startDate = new Date(`${year}-${month}-01`);
         const endDate = new Date(`${year}-${month}-${dayInMonth}`);
-        console.log(startDate);
-        console.log(endDate);
         const data = await BloodSugarCurve.find({
             userId,
             date: { $gte: startDate, $lte: endDate },
         }).sort({ date: 1 });
-        console.log(data);
         return res.status(201).send(data);
     } catch (error) {
         console.error('Error creating or updating blood sugar record:', error);
