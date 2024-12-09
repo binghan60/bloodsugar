@@ -1,4 +1,4 @@
-﻿const apipath = 'https://bloodsugar-omega.vercel.app/';
+﻿const apipath = 'https://bloodsugar-omega.vercel.app';
 const today = new Date();
 const animalId = '674d5126c36e4fd631d342c6';
 
