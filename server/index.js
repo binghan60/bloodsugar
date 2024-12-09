@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 dotenv.config();
-mongoose //連線至資料庫
+mongoose
     .connect(process.env.MONGODB_URI)
     .then(() => {
         console.log('資料庫連線成功');
