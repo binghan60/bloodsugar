@@ -12,9 +12,9 @@ router.get('/:id', async (req, res) => {
     const weight = await Weight.find({ userId: req.params.id }).sort({ date: -1 }).limit(3);
     weight.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     user.weight = weight[weight.length - 1];
-    console.log(user);
+    const userWithWeight = { ...user.toObject(), weight: weight[weight.length - 1] };
     if (user) {
-        res.send(user); //如果有就回傳
+        res.send(userWithWeight); //如果有就回傳
     } else {
         res.status(404).send({ message: '找不到用戶' });
     }
