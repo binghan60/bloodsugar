@@ -9,10 +9,10 @@ const currentDate = {
     dayInMonth: new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate(),
 };
 
-document.addEventListener('DOMContentLoaded', async () => {
-    await updateMainInfo();
-    await updateWightChart();
-    await updateCalendarAndSuagrChart();
+document.addEventListener('DOMContentLoaded', () => {
+    updateMainInfo();
+    updateWightChart();
+    updateCalendar();
 });
 async function updateMainInfo() {
     const animalProfile = await getAnimalProfile();
@@ -36,6 +36,8 @@ async function updateMainInfo() {
         <li class="text-gray-800 text-sm col-span-3">${animalProfile.ligation ? `<i class="fa-solid fa-check text-green-500"></i>` : `<i class="fa-solid fa-x text-red-500"></i>`}</li>`;
 }
 async function updateWightChart() {
+    const container = document.querySelector('#weightChart');
+    container.classList.add('lazyLoading');
     const weight = await getAnimalWeight();
     const datesArray = weight.map((item) => {
         const date = new Date(item.date);
@@ -43,13 +45,13 @@ async function updateWightChart() {
     });
     const weightArray = weight.map((x) => x.weight);
     const maxWeight = Math.max(...weightArray);
-    const container = document.querySelector('#weightChart');
     container.innerHTML = '';
     const canvas = document.createElement('canvas');
     canvas.width = '100%';
     canvas.height = '100%';
+    container.classList.remove('lazyLoading');
     container.appendChild(canvas);
-    const myChart = new Chart(canvas, {
+    const weightChart = new Chart(canvas, {
         type: 'line',
         data: {
             labels: datesArray,
@@ -98,8 +100,9 @@ async function updateWightChart() {
         },
     });
 }
-async function updateCalendarAndSuagrChart() {
+async function updateCalendar() {
     document.querySelector('#calendarTitle').innerText = `${currentDate.year} 年 ${currentDate.month + 1} 月 血糖表`;
+    calendarLazyLoading();
     const cells = await mergeDataToCalendar();
     const windowWidth = window.innerWidth;
     document.querySelector('#calendarGrid').innerHTML = cells
@@ -111,7 +114,7 @@ async function updateCalendarAndSuagrChart() {
 				<!-- 早上 -->
 				<div class="bg-orange-100 p-2 rounded-md mb-2 hover:bg-orange-200">
 					<div class="font-semibold text-orange-500 text-center"><i class="fa-regular fa-sun"></i></div>
-					<div data-type="morningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${
+					<div data-type="morningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${
                       x.morning.bloodSugar
                           ? `<span class="${(function () {
                                 if (x.morning.bloodSugar > 400) {
@@ -124,12 +127,12 @@ async function updateCalendarAndSuagrChart() {
                             })()}">${x.morning.bloodSugar}</span>` + ' mg/dl'
                           : '--'
                   }</div>
-					<div data-type="morningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-syringe"></i> : ${x.morning.insulin === '' ? '--' : x.morning.insulin + '小格'}</div>
+					<div data-type="morningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-syringe"></i> : ${x.morning.insulin === '' ? '--' : x.morning.insulin + '小格'}</div>
 				</div>
 				<!-- 晚上 -->
 				<div class="bg-purple-100 p-2 rounded-md hover:bg-purple-200">
 					<div class="font-semibold text-purple-500 text-center"><i class="fa-regular fa-moon"></i></div>
-					<div data-type="eveningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${
+					<div data-type="eveningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${
                       x.evening.bloodSugar
                           ? `<span class="${(function () {
                                 if (x.evening.bloodSugar > 400) {
@@ -142,7 +145,7 @@ async function updateCalendarAndSuagrChart() {
                             })()}">${x.evening.bloodSugar}</span>` + ' mg/dl'
                           : '--'
                   }</div>
-					<div data-type="eveningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-syringe"></i> : ${x.evening.insulin === '' ? '--' : x.evening.insulin + '小格'}</div>
+					<div data-type="eveningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-syringe"></i> : ${x.evening.insulin === '' ? '--' : x.evening.insulin + '小格'}</div>
 				</div>
             </div>`
                 : windowWidth >= 1024
@@ -150,9 +153,9 @@ async function updateCalendarAndSuagrChart() {
                 : ''
         )
         .join('');
-    await updateCurrentMonthSugarChart();
 }
 async function updateCurrentMonthSugarChart() {
+    document.querySelector('#monthChart').innerHTML = `<div class="lazyLoading rounded-lg overflow-hidden shadow-lg bg-white mt-6 p-4 h-[350px] w-full"></div>`;
     const sugarCurve = await getBloodSugarCurve();
     document.querySelector('#monthChart').innerHTML = '';
     sugarCurve.forEach((data, index) => {
@@ -287,7 +290,8 @@ function cellClick(e, year, month, date) {
         const currentValue = target.textContent
             .replace(/^(<i class="fa-solid fa-droplet"><\/i>)| : --/, '')
             .replace(/[^0-9.]+/, '')
-            .replace('小格', '');
+            .replace('小格', '')
+            .replace(' mg/dl', '');
         if (target.dataset.type.includes('Insulin')) {
             const select = document.createElement('select');
             const options = ['0', '0.5', '1', '1.5', '2'];
@@ -304,14 +308,28 @@ function cellClick(e, year, month, date) {
             target.replaceWith(select);
             select.focus();
             select.addEventListener('blur', async () => {
-                //胰島素
+                // 胰島素select
                 target.innerHTML = `<i class="fa-solid fa-syringe"></i>: ${select.value != '請選擇' ? select.value + '小格' : '--'}`;
                 select.replaceWith(target);
+                if (currentValue == select.value) {
+                    return;
+                }
+                target.classList.add('lazyLoading');
+                target.classList.remove('editable');
                 if (target.dataset.type.includes('morning')) {
                     await createDiaryData(formattedDate, '', select.value, '', '', '');
+                    target.classList.remove('lazyLoading');
+                    target.classList.add('editable');
                 }
                 if (target.dataset.type.includes('evening')) {
                     await createDiaryData(formattedDate, '', '', '', select.value, '');
+                    target.classList.remove('lazyLoading');
+                    target.classList.add('editable');
+                }
+            });
+            select.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    select.blur();
                 }
             });
         } else {
@@ -322,11 +340,17 @@ function cellClick(e, year, month, date) {
             input.className = 'p-1 mt-1 border border-blue-500 rounded text-sm w-full';
             target.replaceWith(input);
             input.focus();
+
             input.addEventListener('blur', async () => {
                 input.replaceWith(target);
+                if (currentValue == input.value) {
+                    return;
+                }
+                target.classList.add('lazyLoading');
+                target.classList.remove('editable');
                 if (target.dataset.type.includes('morning')) {
                     const insertBloodSugarResponse = await createDiaryData(formattedDate, input.value, '', '', '', '');
-                    target.innerHTML = `<i class="fa-solid fa-droplet"></i> : ${
+                    target.innerHTML = `<i class="fa-solid fa-droplet w-[14px]"></i> : ${
                         insertBloodSugarResponse.morning.bloodSugar
                             ? `<span class="${(function () {
                                   if (insertBloodSugarResponse.morning.bloodSugar > 400) {
@@ -339,10 +363,12 @@ function cellClick(e, year, month, date) {
                               })()}">${insertBloodSugarResponse.morning.bloodSugar}</span>` + ' mg/dl'
                             : '--'
                     }`;
+                    target.classList.remove('lazyLoading');
+                    target.classList.add('editable');
                 }
                 if (target.dataset.type.includes('evening')) {
                     const insertBloodSugarResponse = await createDiaryData(formattedDate, '', '', input.value, '', '');
-                    target.innerHTML = `<i class="fa-solid fa-droplet"></i> : ${
+                    target.innerHTML = `<i class="fa-solid fa-droplet w-[14px]"></i> : ${
                         insertBloodSugarResponse.evening.bloodSugar
                             ? `<span class="${(function () {
                                   if (insertBloodSugarResponse.evening.bloodSugar > 400) {
@@ -355,6 +381,14 @@ function cellClick(e, year, month, date) {
                               })()}">${insertBloodSugarResponse.evening.bloodSugar}</span>` + ' mg/dl'
                             : '--'
                     }`;
+                    target.classList.remove('lazyLoading');
+                    target.classList.add('editable');
+                }
+            });
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    input.blur();
+                    // input.dispatchEvent(new Event('blur'));
                 }
             });
         }
@@ -367,7 +401,8 @@ document.querySelector('#prevMonth').addEventListener('click', async () => {
         currentDate.year -= 1;
     }
     currentDate.dayInMonth = new Date(currentDate.year, currentDate.month + 1, 0).getDate();
-    await updateCalendarAndSuagrChart();
+    await updateCalendar();
+    await updateCurrentMonthSugarChart();
 });
 document.querySelector('#nextMonth').addEventListener('click', async () => {
     currentDate.month += 1;
@@ -376,7 +411,8 @@ document.querySelector('#nextMonth').addEventListener('click', async () => {
         currentDate.year += 1;
     }
     currentDate.dayInMonth = new Date(currentDate.year, currentDate.month + 1, 0).getDate();
-    await updateCalendarAndSuagrChart();
+    updateCalendar();
+    updateCurrentMonthSugarChart();
 });
 document.querySelector('#addSugarField').addEventListener('click', () => {
     const container = document.querySelector('#sugarCurveinputContainer');
@@ -461,8 +497,8 @@ async function submitWeight() {
         alert('體重新增失敗');
         return;
     }
-    await updateWightChart();
     document.querySelector('#weightFade').style.display = 'none';
+    await updateWightChart();
 }
 async function submitQuickRecord() {
     const date = new Date();
@@ -486,7 +522,7 @@ async function submitQuickRecord() {
         alert('新增失敗');
         return;
     }
-    await updateCalendarAndSuagrChart();
+    await updateCalendar();
     document.querySelector('#quickRecordFade').style.display = 'none';
 }
 async function getAnimalProfile() {
@@ -633,3 +669,30 @@ async function createSugarCurve(date, records) {
         throw error;
     }
 }
+
+function calendarLazyLoading() {
+    document.querySelector('#calendarGrid').innerHTML = '';
+    for (let i = 0; i < 28; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('rounded-md', 'p-2', 'm-1', 'lazyLoading', 'min-h-[268px]', 'max-h-[288px]');
+        document.querySelector('#calendarGrid').appendChild(cell);
+    }
+}
+const observer = new IntersectionObserver(
+    (entries, observer) => {
+        entries.forEach(async (entry) => {
+            if (entry.isIntersecting) {
+                console.log('元素進入視窗');
+                await updateCurrentMonthSugarChart();
+                observer.unobserve(entry.target);
+            }
+        });
+    },
+    {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0,
+    }
+);
+const target = document.querySelector('#monthChart');
+observer.observe(target);
