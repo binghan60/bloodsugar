@@ -15,7 +15,13 @@ router.get('/:id', async (req, res) => {
     const weights = await Weight.find({ userId })
         .sort({ date: -1 }) // 按日期倒序排列，最近的在最前
         .limit(10);
-    weights.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    weights.sort((a, b) => {
+        const dateComparison = new Date(a.date) - new Date(b.date);
+        if (dateComparison !== 0) {
+            return dateComparison; // 如果 date 不同，直接回傳結果
+        }
+        return new Date(a.createdAt) - new Date(b.createdAt);
+    });
     res.send(weights);
 });
 router.post('/create', async (req, res) => {
