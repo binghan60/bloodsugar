@@ -481,8 +481,6 @@ async function submitQuickRecord(e) {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}`;
-    console.log(formattedDate);
-
     if (date.getHours() < 14) {
         morningBloodSugar = document.querySelector('#quickRecordSuagr').value;
         morningInsulin = document.querySelector('#quickRecordInsulin').value;
@@ -573,7 +571,6 @@ async function submitWeight(e) {
     }
 }
 async function submitSugarCurve(e, date) {
-    console.log(e.target);
     let timeArray = [];
     let sugarArray = [];
     const year = document.querySelector('#sugarCurveYear').value;
@@ -621,7 +618,6 @@ async function getAnimalProfile() {
             throw new Error(`Request failed with status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
         return data;
     } catch (error) {
         alert('伺服器忙碌中，請稍後再試。');
