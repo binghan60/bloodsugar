@@ -16,9 +16,10 @@ router.get('/:id', async (req, res) => {
         .sort({ date: -1 }) // 按日期倒序排列，最近的在最前
         .limit(10);
     weights.sort((a, b) => {
+        // 日期相同再用createdAt排
         const dateComparison = new Date(a.date) - new Date(b.date);
         if (dateComparison !== 0) {
-            return dateComparison; // 如果 date 不同，直接回傳結果
+            return dateComparison;
         }
         return new Date(a.createdAt) - new Date(b.createdAt);
     });
