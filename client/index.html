@@ -78,7 +78,7 @@
                             <li class="text-gray-600 text-sm font-medium">血型：</li>
                             <li class="text-gray-800 text-sm col-span-3">---</li>
                             <li class="text-gray-600 text-sm font-medium">體重：</li>
-                            <li class="text-gray-800 text-sm col-span-3">---</li>
+                            <li id="mainWeight" class="text-gray-800 text-sm col-span-3">---</li>
                             <li class="text-gray-600 text-sm font-medium">品種：</li>
                             <li class="text-gray-800 text-sm col-span-3">---</li>
                             <li class="text-gray-600 text-sm font-medium">結紮：</li>
@@ -121,8 +121,8 @@
             </div>
         </div>
         <!-- 快速紀錄 -->
-        <div id="quickRecordFade" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden">
-            <div class="bg-white p-8 rounded-xl shadow-2xl text-center w-3/4 max-w-2xl">
+        <div id="quickRecordFade" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-20">
+            <div class="bg-white p-4 lg:p-8 rounded-xl shadow-2xl text-center w-[80%] max-w-2xl">
                 <h2 class="text-xl font-semibold mb-2 text-gray-800">快速記錄</h2>
                 <div class="space-y-4 mb-6">
                     <div class="grid grid-cols-2 gap-4 items-center border p-2 rounded-md shadow-md">
@@ -143,11 +143,11 @@
             </div>
         </div>
         <!-- 體重視窗 -->
-        <div id="weightFade" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden">
-            <div class="bg-white p-8 rounded-xl shadow-2xl text-center w-3/4 max-w-2xl">
+        <div id="weightFade" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-20">
+            <div class="bg-white p-4 lg:p-8 rounded-xl shadow-2xl text-center w-[80%] max-w-2xl">
                 <h2 class="text-xl font-semibold mb-2 text-gray-800">新增體重紀錄</h2>
                 <div class="space-y-4 mb-6">
-                    <div class="grid grid-cols-2 gap-4 items-center border p-2 rounded-md shadow-md">
+                    <div class="grid grid-cols-[2fr_1fr] lg:grid-cols-2 gap-4 items-center border p-2 rounded-md shadow-md">
                         <input id="weightDate" type="date" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
                         <input id="weightValue" type="number" placeholder="輸入體重" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
                     </div>
@@ -159,8 +159,8 @@
             </div>
         </div>
         <!-- 血糖曲線視窗 -->
-        <div id="sugarCurvefade" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden">
-            <div class="bg-white p-8 rounded-xl shadow-2xl text-center w-3/4 max-w-2xl">
+        <div id="sugarCurvefade" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-20">
+            <div class="bg-white p-4 lg:p-8 rounded-xl shadow-2xl text-center w-[80%] max-w-2xl">
                 <h2 class="text-xl font-semibold mb-2 text-gray-800">建立血糖曲線</h2>
                 <fieldset class="grid grid-cols-3 gap-4 items-center border p-2 rounded-md shadow-md mb-5">
                     <legend><h2>日期</h2></legend>
@@ -171,7 +171,7 @@
                 <div class="space-y-4 mb-6" id="sugarCurveinputContainer">
                     <div class="grid grid-cols-[2fr_2fr_0.5fr] gap-4 items-center border p-2 rounded-md shadow-md">
                         <input type="time" name="sugarCurveTime" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
-                        <input type="number" name="sugarCurveBloodSugar" placeholder="輸入血糖值" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
+                        <input type="number" name="sugarCurveBloodSugar" placeholder="血糖" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
                         <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md">X</button>
                     </div>
                 </div>
@@ -184,7 +184,7 @@
                 </div>
             </div>
         </div>
-        <div class="fixed right-6 bottom-6 space-y-4">
+        <div class="fixed right-6 bottom-6 space-y-4 z-10">
             <button class="w-14 h-14 rounded-full bg-green-400 text-black shadow-md flex items-center justify-center" onclick="openQuickRecordWindow()">
                 <i class="fa-solid fa-plus"></i>
             </button>

@@ -28,7 +28,7 @@ async function updateMainInfo() {
         <li class="text-gray-800 text-sm col-span-3">${animalProfile.gender === 'Male' ? `<i class="fa-solid fa-mars text-blue-600"></i>` : `<i class="fa-solid fa-venus text-pink-600"></i>`}</li>
         <li class="text-gray-600 text-sm font-medium">血型：</li>
         <li class="text-gray-800 text-sm col-span-3">${animalProfile.bloodType} 型</li>
-        <li class="text-gray-600 text-sm font-medium">體重：</li>
+        <li id="mainWeight" class="text-gray-600 text-sm font-medium">體重：</li>
         <li class="text-gray-800 text-sm col-span-3">${animalProfile.weight} 公斤</li>
         <li class="text-gray-600 text-sm font-medium">品種：</li>
         <li class="text-gray-800 text-sm col-span-3">${animalProfile.variety}</li>
@@ -39,6 +39,9 @@ async function updateWightChart() {
     const container = document.querySelector('#weightChart');
     container.classList.add('lazyLoading');
     const weight = await getAnimalWeight();
+    console.log(weight);
+    console.log(weight[weight.length - 1]);
+    document.querySelector('#mainWeight').innerText = `${weight[weight.length - 1].weight} 公斤`;
     const datesArray = weight.map((item) => {
         const date = new Date(item.date);
         return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
@@ -545,7 +548,7 @@ async function submitSugarCurve(e, date) {
     document.querySelector('#input-container').innerHTML = `
         <div class="grid grid-cols-[2fr_2fr_0.5fr] gap-4 items-center border p-2 rounded-md shadow-md">
             <input type="time" name="sugarCurveTime" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
-            <input type="number" name="sugarCurveBloodSugar" placeholder="輸入血糖值" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+            <input type="number" name="sugarCurveBloodSugar" placeholder="血糖" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
             <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md">X</button>
         </div>`;
     document.querySelector('#sugarCurvefade').style.display = 'none';
