@@ -13,7 +13,7 @@ router.get('/:id', async (req, res) => {
         return res.status(400).send({ error: 'Invalid user ID' });
     }
     const weights = await Weight.find({ userId })
-        .sort({ date: -1 }) // 按日期倒序排列，最近的在最前
+        .sort({ createdAt: -1 }) // 按日期倒序排列，最近的在最前
         .limit(10);
 
     weights.sort((a, b) => new Date(a.date) - new Date(b.date));
