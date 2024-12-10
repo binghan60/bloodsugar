@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>動物管理系統</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+    <body class="bg-blue-100 text-base">
+        <div class="fixed inset-0 flex justify-center items-center hidden z-20" style="display: flex">
+            <div class="bg-white p-4 lg:p-8 rounded-xl shadow-2xl text-center w-[80%] max-w-2xl">
+                <h2 class="text-xl font-semibold mb-2 text-gray-800">動物管理系統</h2>
+                <div class="space-y-4 mb-6">
+                    <div class="grid grid-cols-1 gap-4 items-center p-2 rounded-md">
+                        <input id="quickRecordSuagr" placeholder="請輸入帳號" type="tel" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
+                        <input id="quickRecordSuagr" placeholder="請輸入密碼" type="tel" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="flex justify-around">
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="document.querySelector('#quickRecordFade').style.display='none'">註冊</button>
+                    <button class="bg-blue-500 hover:bg-blue-400 text-white py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="submitQuickRecord(event)">登入</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
