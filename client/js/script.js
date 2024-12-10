@@ -10,12 +10,14 @@ const currentDate = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    updateMainInfo();
+    updateProfile();
     updateWightChart();
     updateCalendar();
 });
-async function updateMainInfo() {
+async function updateProfile() {
+    document.querySelector('#profileCard').classList.add('lazyLoading');
     const animalProfile = await getAnimalProfile();
+    document.querySelector('#profileCard').classList.remove('lazyLoading');
     const detailBirthday = calculateAgeWithMonths(animalProfile.birthday);
     document.querySelector('#profileCard').innerHTML = `
         <li class="text-gray-600 text-sm font-medium">姓名：</li>
@@ -513,7 +515,8 @@ async function submitWeight(e) {
         return;
     }
     document.querySelector('#weightFade').style.display = 'none';
-    await updateWightChart();
+    updateWightChart();
+    updateProfile();
 }
 async function submitSugarCurve(e, date) {
     let timeArray = [];
