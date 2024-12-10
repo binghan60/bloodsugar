@@ -119,7 +119,7 @@ async function updateCalendar() {
         .map((x) =>
             x.date
                 ? `
-            <div class="${today.getFullYear() === x.year && today.getMonth() + 1 === x.month && today.getDate() === x.date ? 'bg-sky-300' : 'bg-blue-100'} text-blue-900 rounded-md p-2 hover:bg-blue-300 cursor-pointer m-1">
+            <div id="calendar${x.year}-${x.month >= 10 ? x.month : '0' + x.month}-${x.date >= 10 ? x.date : '0' + x.date}" class="${today.getFullYear() === x.year && today.getMonth() + 1 === x.month && today.getDate() === x.date ? 'bg-sky-300' : 'bg-blue-100'} text-blue-900 rounded-md p-2 hover:bg-blue-300 cursor-pointer m-1">
                 <div class="font-bold text-xl text-center">${x.date}</div>
 				<!-- 早上 -->
 				<div class="bg-orange-100 p-2 rounded-md mb-2 hover:bg-orange-200">
@@ -463,9 +463,10 @@ function openCreateSugarCurveWindow() {
     document.querySelector('#sugarCurveDay').value = day;
     document.querySelector('#sugarCurveBtn').innerHTML = `
         <button class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="document.querySelector('#sugarCurvefade').style.display='none'">取消</button>
-        <button class="bg-blue-500 hover:bg-blue-400 text-white py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="submitSugarCurve( event,'${formattedDate}')">確定</button>`;
+        <button class="bg-blue-500 hover:bg-blue-400 text-white py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="submitSugarCurve(event,'${formattedDate}')">確定</button>`;
     document.querySelector('#sugarCurvefade').style.display = 'flex';
 }
+/////////////////////
 async function submitQuickRecord(e) {
     const quickRecordSuagr = document.querySelector('#quickRecordSuagr').value;
     const quickRecordInsulin = document.querySelector('#quickRecordInsulin').value;
@@ -480,6 +481,8 @@ async function submitQuickRecord(e) {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}`;
+    console.log(formattedDate);
+
     if (date.getHours() < 14) {
         morningBloodSugar = document.querySelector('#quickRecordSuagr').value;
         morningInsulin = document.querySelector('#quickRecordInsulin').value;
@@ -498,9 +501,54 @@ async function submitQuickRecord(e) {
         alert('新增失敗');
         return;
     }
-
-    await updateCalendar();
     document.querySelector('#quickRecordFade').style.display = 'none';
+    document.querySelector(`#calendar${formattedDate}`).innerHTML = '';
+    document.querySelector(`#calendar${formattedDate}`).classList.add('lazyLoading');
+    document.querySelector(`#calendar${formattedDate}`).classList.remove('cursor-pointer');
+    const diaryData = await mergeDataToCalendar();
+    const isoDate = new Date(formattedDate).toISOString();
+    const todayData = diaryData.find((x) => x.isoDate == isoDate);
+    document.querySelector(`#calendar${formattedDate}`).innerHTML = `
+        <div class="font-bold text-xl text-center">${todayData.date}</div>
+        <!-- 早上 -->
+        <div class="bg-orange-100 p-2 rounded-md mb-2 hover:bg-orange-200">
+            <div class="font-semibold text-orange-500 text-center"><i class="fa-regular fa-sun"></i></div>
+            <div data-type="morningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${todayData.year},${todayData.month},${todayData.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${
+        todayData.morning.bloodSugar
+            ? `<span class="${(function () {
+                  if (todayData.morning.bloodSugar > 400) {
+                      return 'text-red-500';
+                  }
+                  if (todayData.morning.bloodSugar > 250) {
+                      return 'text-amber-500';
+                  }
+                  return 'text-green-500';
+              })()}">${todayData.morning.bloodSugar}</span>` + ' mg/dl'
+            : '--'
+    }</div>
+        <div data-type="morningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${todayData.year},${todayData.month},${todayData.date})"><i class="fa-solid fa-syringe"></i> : ${todayData.morning.insulin === '' ? '--' : todayData.morning.insulin + '小格'}</div>
+        </div>
+        <!-- 晚上 -->
+        <div class="bg-purple-100 p-2 rounded-md hover:bg-purple-200">
+            <div class="font-semibold text-purple-500 text-center"><i class="fa-regular fa-moon"></i></div>
+            <div data-type="eveningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${todayData.year},${todayData.month},${todayData.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${
+        todayData.evening.bloodSugar
+            ? `<span class="${(function () {
+                  if (todayData.evening.bloodSugar > 400) {
+                      return 'text-red-600';
+                  }
+                  if (todayData.evening.bloodSugar > 250) {
+                      return 'text-amber-500';
+                  }
+                  return 'text-green-500';
+              })()}">${todayData.evening.bloodSugar}</span>` + ' mg/dl'
+            : '--'
+    }</div>
+        <div data-type="eveningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${todayData.year},${todayData.month},${todayData.date})"><i class="fa-solid fa-syringe"></i> : ${todayData.evening.insulin === '' ? '--' : todayData.evening.insulin + '小格'}</div>
+    </div>`;
+
+    document.querySelector(`#calendar${formattedDate}`).classList.remove('lazyLoading');
+    document.querySelector(`#calendar${formattedDate}`).classList.add('cursor-pointer');
 }
 async function submitWeight(e) {
     const date = document.querySelector('#weightDate').value;
@@ -525,6 +573,7 @@ async function submitWeight(e) {
     }
 }
 async function submitSugarCurve(e, date) {
+    console.log(e.target);
     let timeArray = [];
     let sugarArray = [];
     const year = document.querySelector('#sugarCurveYear').value;
@@ -547,15 +596,15 @@ async function submitSugarCurve(e, date) {
         time,
         value: sugarArray[index],
     }));
+    const createSugarCurveResponse = await createSugarCurve(date, records);
     e.target.classList.remove('submitLoading');
     e.target.disabled = false;
-    const createSugarCurveResponse = await createSugarCurve(date, records);
     if (!createSugarCurveResponse._id) {
         alert('新增失敗');
         return;
     }
     await updateCurrentMonthSugarChart();
-    document.querySelector('#input-container').innerHTML = `
+    document.querySelector('#sugarCurveinputContainer').innerHTML = `
         <div class="grid grid-cols-[2fr_2fr_0.5fr] gap-4 items-center border p-2 rounded-md shadow-md">
             <input type="time" name="sugarCurveTime" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
             <input type="number" name="sugarCurveBloodSugar" placeholder="血糖" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
@@ -740,5 +789,4 @@ function isToday(dateString) {
     return inputDate.getFullYear() === today.getFullYear() && inputDate.getMonth() === today.getMonth() && inputDate.getDate() === today.getDate();
 }
 // TODO
-// 1.體重合併到基本資訊
-// 2.快速新增只更新當天卡片
+// 1.快速新增只更新當天卡片
