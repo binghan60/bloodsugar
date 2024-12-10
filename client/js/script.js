@@ -428,6 +428,8 @@ document.querySelector('#addSugarField').addEventListener('click', () => {
     });
 });
 function openQuickRecordWindow() {
+    document.querySelector('#quickRecordSuagr').value = '';
+    document.querySelector('#quickRecordInsulin').value = 0;
     document.querySelector('#quickRecordFade').style.display = 'flex';
 }
 function openCreateWeightWindow() {
@@ -451,56 +453,18 @@ function openCreateSugarCurveWindow() {
     document.querySelector('#sugarCurveDay').value = day;
     document.querySelector('#sugarCurveBtn').innerHTML = `
         <button class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="document.querySelector('#sugarCurvefade').style.display='none'">取消</button>
-        <button class="bg-blue-500 hover:bg-blue-400 text-white py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="submitSugarCurve('${formattedDate}')">確定</button>`;
+        <button class="bg-blue-500 hover:bg-blue-400 text-white py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="submitSugarCurve( event,'${formattedDate}')">確定</button>`;
     document.querySelector('#sugarCurvefade').style.display = 'flex';
 }
-async function submitSugarCurve(date) {
-    let timeArray = [];
-    let sugarArray = [];
-    document.querySelectorAll('input[name=sugarCurveTime]').forEach((x) => {
-        timeArray.push(x.value);
-    });
-    document.querySelectorAll('input[name=sugarCurveBloodSugar]').forEach((x) => {
-        sugarArray.push(x.value);
-    });
-    if (timeArray.includes('') || sugarArray.includes('')) {
+async function submitQuickRecord(e) {
+    const quickRecordSuagr = document.querySelector('#quickRecordSuagr').value;
+    const quickRecordInsulin = document.querySelector('#quickRecordInsulin').value;
+    if (!quickRecordSuagr || !quickRecordInsulin) {
         alert('請輸入完整資訊');
         return;
     }
-    let records = timeArray.map((time, index) => ({
-        time: time,
-        value: sugarArray[index],
-    }));
-    const createSugarCurveResponse = await createSugarCurve(date, records);
-    if (!createSugarCurveResponse._id) {
-        alert('新增失敗');
-        return;
-    }
-    await updateCurrentMonthSugarChart();
-    document.querySelector('#input-container').innerHTML = `
-        <div class="grid grid-cols-[2fr_2fr_0.5fr] gap-4 items-center border p-2 rounded-md shadow-md">
-            <input type="time" name="sugarCurveTime" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
-            <input type="number" name="sugarCurveBloodSugar" placeholder="輸入血糖值" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
-            <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md">X</button>
-        </div>`;
-    document.querySelector('#sugarCurvefade').style.display = 'none';
-}
-async function submitWeight() {
-    const date = document.querySelector('#weightDate').value;
-    const weight = document.querySelector('#weightValue').value;
-    if (!date || !weight) {
-        alert('請輸入完整資訊');
-        return;
-    }
-    const createWeightResponse = await createWeight(date, weight);
-    if (!createWeightResponse._id) {
-        alert('體重新增失敗');
-        return;
-    }
-    document.querySelector('#weightFade').style.display = 'none';
-    await updateWightChart();
-}
-async function submitQuickRecord() {
+    e.target.classList.add('submitLoading');
+    e.target.disabled = true;
     const date = new Date();
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -518,12 +482,73 @@ async function submitQuickRecord() {
         eveningInsulin = document.querySelector('#quickRecordInsulin').value;
     }
     const createQuickRecordResponse = await createDiaryData(formattedDate, morningBloodSugar, morningInsulin, eveningBloodSugar, eveningInsulin, '');
+    e.target.classList.remove('submitLoading');
+    e.target.disabled = false;
     if (!createQuickRecordResponse._id) {
         alert('新增失敗');
         return;
     }
+
     await updateCalendar();
     document.querySelector('#quickRecordFade').style.display = 'none';
+}
+async function submitWeight(e) {
+    const date = document.querySelector('#weightDate').value;
+    const weight = document.querySelector('#weightValue').value;
+    if (!date || !weight) {
+        alert('請輸入完整資訊');
+        return;
+    }
+    e.target.classList.add('submitLoading');
+    e.target.disabled = true;
+    const createWeightResponse = await createWeight(date, weight);
+    e.target.classList.remove('submitLoading');
+    e.target.disabled = false;
+    if (!createWeightResponse._id) {
+        alert('體重新增失敗');
+        return;
+    }
+    document.querySelector('#weightFade').style.display = 'none';
+    await updateWightChart();
+}
+async function submitSugarCurve(e, date) {
+    let timeArray = [];
+    let sugarArray = [];
+    const year = document.querySelector('#sugarCurveYear').value;
+    const month = document.querySelector('#sugarCurveMonth').value;
+    const day = document.querySelector('#sugarCurveDay').value;
+    document.querySelectorAll('input[name=sugarCurveTime]').forEach((x) => {
+        timeArray.push(x.value);
+    });
+    document.querySelectorAll('input[name=sugarCurveBloodSugar]').forEach((x) => {
+        sugarArray.push(x.value);
+    });
+    if (!year || !month || !day || timeArray.includes('') || sugarArray.includes('')) {
+        alert('請輸入完整資訊');
+        return;
+    }
+    e.target.classList.add('submitLoading');
+    e.target.disabled = true;
+    // 合併資料
+    let records = timeArray.map((time, index) => ({
+        time,
+        value: sugarArray[index],
+    }));
+    e.target.classList.remove('submitLoading');
+    e.target.disabled = false;
+    const createSugarCurveResponse = await createSugarCurve(date, records);
+    if (!createSugarCurveResponse._id) {
+        alert('新增失敗');
+        return;
+    }
+    await updateCurrentMonthSugarChart();
+    document.querySelector('#input-container').innerHTML = `
+        <div class="grid grid-cols-[2fr_2fr_0.5fr] gap-4 items-center border p-2 rounded-md shadow-md">
+            <input type="time" name="sugarCurveTime" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+            <input type="number" name="sugarCurveBloodSugar" placeholder="輸入血糖值" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+            <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md">X</button>
+        </div>`;
+    document.querySelector('#sugarCurvefade').style.display = 'none';
 }
 async function getAnimalProfile() {
     try {
@@ -669,7 +694,6 @@ async function createSugarCurve(date, records) {
         throw error;
     }
 }
-
 function calendarLazyLoading() {
     document.querySelector('#calendarGrid').innerHTML = '';
     for (let i = 0; i < 28; i++) {
@@ -682,7 +706,6 @@ const observer = new IntersectionObserver(
     (entries, observer) => {
         entries.forEach(async (entry) => {
             if (entry.isIntersecting) {
-                console.log('元素進入視窗');
                 await updateCurrentMonthSugarChart();
                 observer.unobserve(entry.target);
             }
