@@ -28,8 +28,8 @@ async function updateMainInfo() {
         <li class="text-gray-800 text-sm col-span-3">${animalProfile.gender === 'Male' ? `<i class="fa-solid fa-mars text-blue-600"></i>` : `<i class="fa-solid fa-venus text-pink-600"></i>`}</li>
         <li class="text-gray-600 text-sm font-medium">血型：</li>
         <li class="text-gray-800 text-sm col-span-3">${animalProfile.bloodType} 型</li>
-        <li id="mainWeight" class="text-gray-600 text-sm font-medium">體重：</li>
-        <li class="text-gray-800 text-sm col-span-3">${animalProfile.weight} 公斤</li>
+        <li class="text-gray-600 text-sm font-medium">體重：</li>
+        <li id="mainWeight" class="text-gray-800 text-sm col-span-3">${animalProfile.weight} 公斤</li>
         <li class="text-gray-600 text-sm font-medium">品種：</li>
         <li class="text-gray-800 text-sm col-span-3">${animalProfile.variety}</li>
         <li class="text-gray-600 text-sm font-medium">結紮：</li>
