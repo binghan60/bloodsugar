@@ -29,7 +29,7 @@ async function updateMainInfo() {
         <li class="text-gray-600 text-sm font-medium">血型：</li>
         <li class="text-gray-800 text-sm col-span-3">${animalProfile.bloodType} 型</li>
         <li class="text-gray-600 text-sm font-medium">體重：</li>
-        <li id="mainWeight" class="text-gray-800 text-sm col-span-3">${animalProfile.weight} 公斤</li>
+        <li class="text-gray-800 text-sm col-span-3">${animalProfile.weight} 公斤</li>
         <li class="text-gray-600 text-sm font-medium">品種：</li>
         <li class="text-gray-800 text-sm col-span-3">${animalProfile.variety}</li>
         <li class="text-gray-600 text-sm font-medium">結紮：</li>
@@ -39,9 +39,6 @@ async function updateWightChart() {
     const container = document.querySelector('#weightChart');
     container.classList.add('lazyLoading');
     const weight = await getAnimalWeight();
-    console.log(weight);
-    console.log(weight[weight.length - 1]);
-    document.querySelector('#mainWeight').innerText = `${weight[weight.length - 1].weight} 公斤`;
     const datesArray = weight.map((item) => {
         const date = new Date(item.date);
         return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
@@ -566,6 +563,7 @@ async function getAnimalProfile() {
             throw new Error(`Request failed with status: ${response.status}`);
         }
         const data = await response.json();
+        console.log(data);
         return data;
     } catch (error) {
         alert('伺服器忙碌中，請稍後再試。');
@@ -726,3 +724,6 @@ const observer = new IntersectionObserver(
 );
 const target = document.querySelector('#monthChart');
 observer.observe(target);
+// TODO
+// 1.體重合併到基本資訊
+// 2.快速新增只更新當天卡片
