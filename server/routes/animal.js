@@ -11,7 +11,8 @@ router.get('/:id', async (req, res) => {
     const user = await Animal.findById(req.params.id); //用網址的ID去資料庫找該用戶  管理者顯示用戶資料用
     const weight = await Weight.find({ userId: req.params.id }).sort({ date: -1 }).limit(3);
     weight.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-    user['weight'] = weight[weight.length - 1];
+    user.weight = weight[weight.length - 1];
+    console.log(user);
     if (user) {
         res.send(user); //如果有就回傳
     } else {
