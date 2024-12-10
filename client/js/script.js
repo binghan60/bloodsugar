@@ -21,27 +21,25 @@ async function updateProfile() {
     document.querySelector('#profileCard').classList.remove('lazyLoading');
     const detailBirthday = calculateAgeWithMonths(animalProfile.birthday);
     document.querySelector('#profileCard').innerHTML = `
-        <div>
-            <h5 class="text-blue-500 text-lg font-semibold mb-3">基本資料</h5>
-            <ul class="list-none grid grid-cols-4 gap-x-4 gap-y-3">
-                <li class="text-gray-600 text-sm font-medium">姓名：</li>
-                <li class="text-gray-800 text-sm col-span-3">${animalProfile.name}</li>
-                <li class="text-gray-600 text-sm font-medium">種類：</li>
-                <li class="text-gray-800 text-sm col-span-3"><i class="fa-solid fa-${animalProfile.type}"></i></li>
-                <li class="text-gray-600 text-sm font-medium">生日：</li>
-                <li class="text-gray-800 text-sm col-span-3">${new Date(animalProfile.birthday).toLocaleDateString()} (${detailBirthday.years}歲 ${detailBirthday.months}個月)</li>
-                <li class="text-gray-600 text-sm font-medium">性別：</li>
-                <li class="text-gray-800 text-sm col-span-3">${animalProfile.gender === 'Male' ? `<i class="fa-solid fa-mars text-blue-600"></i>` : `<i class="fa-solid fa-venus text-pink-600"></i>`}</li>
-                <li class="text-gray-600 text-sm font-medium">血型：</li>
-                <li class="text-gray-800 text-sm col-span-3">${animalProfile.bloodType} 型</li>
-                <li class="text-gray-600 text-sm font-medium">體重：</li>
-                <li class="text-gray-800 text-sm col-span-3">${animalProfile.weight} 公斤</li>
-                <li class="text-gray-600 text-sm font-medium">品種：</li>
-                <li class="text-gray-800 text-sm col-span-3">${animalProfile.variety}</li>
-                <li class="text-gray-600 text-sm font-medium">結紮：</li>
-                <li class="text-gray-800 text-sm col-span-3">${animalProfile.ligation ? `<i class="fa-solid fa-check text-green-500"></i>` : `<i class="fa-solid fa-x text-red-500"></i>`}</li>
-            </ul>
-        </div>`;
+        <h5 class="text-blue-500 text-lg font-semibold mb-3">基本資料</h5>
+        <ul class="list-none grid grid-cols-4 gap-x-4 gap-y-3">
+            <li class="text-gray-600 text-sm font-medium">姓名：</li>
+            <li class="text-gray-800 text-sm col-span-3">${animalProfile.name}</li>
+            <li class="text-gray-600 text-sm font-medium">種類：</li>
+            <li class="text-gray-800 text-sm col-span-3"><i class="fa-solid fa-${animalProfile.type}"></i></li>
+            <li class="text-gray-600 text-sm font-medium">生日：</li>
+            <li class="text-gray-800 text-sm col-span-3">${new Date(animalProfile.birthday).toLocaleDateString()} (${detailBirthday.years}歲 ${detailBirthday.months}個月)</li>
+            <li class="text-gray-600 text-sm font-medium">性別：</li>
+            <li class="text-gray-800 text-sm col-span-3">${animalProfile.gender === 'Male' ? `<i class="fa-solid fa-mars text-blue-600"></i>` : `<i class="fa-solid fa-venus text-pink-600"></i>`}</li>
+            <li class="text-gray-600 text-sm font-medium">血型：</li>
+            <li class="text-gray-800 text-sm col-span-3">${animalProfile.bloodType} 型</li>
+            <li class="text-gray-600 text-sm font-medium">體重：</li>
+            <li class="text-gray-800 text-sm col-span-3">${animalProfile.weight} 公斤</li>
+            <li class="text-gray-600 text-sm font-medium">品種：</li>
+            <li class="text-gray-800 text-sm col-span-3">${animalProfile.variety}</li>
+            <li class="text-gray-600 text-sm font-medium">結紮：</li>
+            <li class="text-gray-800 text-sm col-span-3">${animalProfile.ligation ? `<i class="fa-solid fa-check text-green-500"></i>` : `<i class="fa-solid fa-x text-red-500"></i>`}</li>
+        </ul>`;
 }
 async function updateWightChart() {
     const container = document.querySelector('#weightChart');
