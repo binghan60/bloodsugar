@@ -75,6 +75,10 @@ async function updateWightChart() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
+                title: {
+                    display: true,
+                    text: `體重走勢圖`,
+                },
                 legend: {
                     display: false,
                     position: 'top',
