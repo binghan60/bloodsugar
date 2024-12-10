@@ -21,6 +21,24 @@
             -moz-appearance: textfield;
             appearance: none;
         }
+        .lazyLoading {
+            background: #f0f0f0;
+            color: transparent;
+            min-height: 1em;
+            display: inline-block;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% {
+                background-color: #f0f0f0;
+            }
+            50% {
+                background-color: #e0e0e0;
+            }
+            100% {
+                background-color: #f0f0f0;
+            }
+        }
     </style>
     <body class="bg-blue-300 text-base">
         <div class="container mx-auto p-3 lg:p-4">
@@ -52,12 +70,12 @@
                     </div>
                 </div>
 
-                <div class="grid-cols-1 rounded-lg overflow-hidden shadow-lg bg-white p-6 lg:p-4 h-full min-h-[200px]">
+                <div class="grid-cols-1 rounded-lg overflow-hidden shadow-lg bg-white p-2 lg:p-4 h-full min-h-[200px]">
                     <div id="weightChart" class="w-full h-full"></div>
                 </div>
             </div>
             <!-- 日曆 -->
-            <div class="rounded-lg overflow-hidden shadow-lg bg-white mt-6 p-2 lg:p-4 lg:min-h-[1800px] min-h-[800px]">
+            <div class="rounded-lg overflow-hidden shadow-lg bg-white mt-6 p-2 lg:p-4 lg:min-h-[1200px] min-h-[800px]">
                 <h1 class="text-center py-3 select-none text-2xl font-bold text-blue-600">
                     <button id="prevMonth" class="text-blue-500 hover:text-blue-700">
                         <i class="fa-solid fa-caret-left text-3xl"></i>
