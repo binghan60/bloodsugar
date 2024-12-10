@@ -12,7 +12,7 @@ router.get('/:id', async (req, res) => {
     const weight = await Weight.find({ userId: req.params.id }).sort({ date: -1 }).limit(3);
     weight.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     user.weight = weight[weight.length - 1];
-    const userWithWeight = { ...user.toObject(), weight: weight[weight.length - 1] };
+    const userWithWeight = { ...user.toObject(), weight: weight[weight.length - 1].weight };
     if (user) {
         res.send(userWithWeight); //如果有就回傳
     } else {
