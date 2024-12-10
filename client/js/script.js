@@ -520,7 +520,9 @@ async function submitWeight(e) {
     }
     document.querySelector('#weightFade').style.display = 'none';
     updateWightChart();
-    updateProfile();
+    if (isToday(date)) {
+        updateProfile();
+    }
 }
 async function submitSugarCurve(e, date) {
     let timeArray = [];
@@ -731,6 +733,12 @@ const observer = new IntersectionObserver(
 );
 const target = document.querySelector('#monthChart');
 observer.observe(target);
+
+function isToday(dateString) {
+    const inputDate = new Date(dateString); // 將字串轉換成 Date 物件
+    const today = new Date();
+    return inputDate.getFullYear() === today.getFullYear() && inputDate.getMonth() === today.getMonth() && inputDate.getDate() === today.getDate();
+}
 // TODO
 // 1.體重合併到基本資訊
 // 2.快速新增只更新當天卡片
