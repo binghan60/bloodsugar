@@ -119,42 +119,18 @@ async function updateCalendar() {
         .map((x) =>
             x.date
                 ? `
-            <div id="calendar${x.year}-${x.month >= 10 ? x.month : '0' + x.month}-${x.date >= 10 ? x.date : '0' + x.date}" class="${today.getFullYear() === x.year && today.getMonth() + 1 === x.month && today.getDate() === x.date ? 'bg-sky-300' : 'bg-blue-100'} text-blue-900 rounded-md p-2 hover:bg-blue-300 cursor-pointer m-1">
+            <div id="calendar${x.year}-${x.month >= 10 ? x.month : '0' + x.month}-${x.date >= 10 ? x.date : '0' + x.date}" class="${today.getFullYear() === x.year && today.getMonth() + 1 === x.month && today.getDate() === x.date ? 'bg-sky-300' : 'bg-blue-200'} text-blue-900 rounded-md p-2 hover:bg-blue-300 cursor-pointer m-1">
                 <div class="font-bold text-xl text-center">${x.date}</div>
 				<!-- 早上 -->
-				<div class="bg-orange-100 p-2 rounded-md mb-2 hover:bg-orange-200">
-					<div class="font-semibold text-orange-500 text-center"><i class="fa-regular fa-sun"></i></div>
-					<div data-type="morningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${
-                      x.morning.bloodSugar
-                          ? `<span class="${(function () {
-                                if (x.morning.bloodSugar > 400) {
-                                    return 'text-red-500';
-                                }
-                                if (x.morning.bloodSugar > 250) {
-                                    return 'text-amber-500';
-                                }
-                                return 'text-green-500';
-                            })()}">${x.morning.bloodSugar}</span>` + ' mg/dl'
-                          : '--'
-                  }</div>
+				<div class="bg-blue-100 p-2 rounded-md mb-2 hover:bg-blue-200">
+					<div class="font-semibold text-blue-900 text-center"><i class="fa-regular fa-sun"></i> ${x.morning.time}</div>
+					<div data-type="morningBloodSugar" class="editable p-1 text-sm mt-1 ${bloodSugarBGColor(x.morning.bloodSugar)} border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${x.morning.bloodSugar ? x.morning.bloodSugar + ' mg/dl' : '--'}</div>
 					<div data-type="morningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-syringe"></i> : ${x.morning.insulin === '' ? '--' : x.morning.insulin + '小格'}</div>
 				</div>
 				<!-- 晚上 -->
-				<div class="bg-purple-100 p-2 rounded-md hover:bg-purple-200">
-					<div class="font-semibold text-purple-500 text-center"><i class="fa-regular fa-moon"></i></div>
-					<div data-type="eveningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${
-                      x.evening.bloodSugar
-                          ? `<span class="${(function () {
-                                if (x.evening.bloodSugar > 400) {
-                                    return 'text-red-600';
-                                }
-                                if (x.evening.bloodSugar > 250) {
-                                    return 'text-amber-500';
-                                }
-                                return 'text-green-500';
-                            })()}">${x.evening.bloodSugar}</span>` + ' mg/dl'
-                          : '--'
-                  }</div>
+				<div class="bg-blue-100 p-2 rounded-md hover:bg-blue-200">
+					<div class="font-semibold text-blue-900 text-center"><i class="fa-regular fa-moon"></i> ${x.evening.time}</div>
+					<div data-type="eveningBloodSugar" class="editable p-1 text-sm mt-1 ${bloodSugarBGColor(x.evening.bloodSugar)} border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${x.evening.bloodSugar ? x.evening.bloodSugar + ' mg/dl' : '--'}</div>
 					<div data-type="eveningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${x.year},${x.month},${x.date})"><i class="fa-solid fa-syringe"></i> : ${x.evening.insulin === '' ? '--' : x.evening.insulin + '小格'}</div>
 				</div>
             </div>`
@@ -256,8 +232,8 @@ async function mergeDataToCalendar() {
             month: currentDate.month + 1,
             date: i + 1,
             isoDate,
-            morning: { bloodSugar: '', insulin: '' },
-            evening: { bloodSugar: '', insulin: '' },
+            morning: { time: '', bloodSugar: '', insulin: '' },
+            evening: { time: '', bloodSugar: '', insulin: '' },
         };
     });
     console.log('days before merge:', days);
@@ -267,10 +243,13 @@ async function mergeDataToCalendar() {
         if (diaryEntry) {
             return Object.assign({}, day, {
                 morning: {
+                    time: diaryEntry.morning.time ?? '',
                     bloodSugar: diaryEntry.morning.bloodSugar ?? '',
                     insulin: diaryEntry.morning.insulin ?? '',
                 },
                 evening: {
+                    time: diaryEntry.evening.time ?? '',
+
                     bloodSugar: diaryEntry.evening.bloodSugar ?? '',
                     insulin: diaryEntry.evening.insulin ?? '',
                 },
@@ -360,37 +339,17 @@ function cellClick(e, year, month, date) {
                 target.classList.remove('editable');
                 if (target.dataset.type.includes('morning')) {
                     const insertBloodSugarResponse = await createDiaryData(formattedDate, input.value, '', '', '', '');
-                    target.innerHTML = `<i class="fa-solid fa-droplet w-[14px]"></i> : ${
-                        insertBloodSugarResponse.morning.bloodSugar
-                            ? `<span class="${(function () {
-                                  if (insertBloodSugarResponse.morning.bloodSugar > 400) {
-                                      return 'text-red-600';
-                                  }
-                                  if (insertBloodSugarResponse.morning.bloodSugar > 250) {
-                                      return 'text-amber-500';
-                                  }
-                                  return 'text-green-500';
-                              })()}">${insertBloodSugarResponse.morning.bloodSugar}</span>` + ' mg/dl'
-                            : '--'
-                    }`;
+                    target.classList.remove('bg-white', 'bg-amber-100', 'bg-green-100', 'bg-red-100');
+                    target.classList.add(bloodSugarBGColor(insertBloodSugarResponse.morning.bloodSugar), 'aaa');
+                    target.innerHTML = `<i class="fa-solid fa-droplet w-[14px]"></i> : ${insertBloodSugarResponse.morning.bloodSugar ? insertBloodSugarResponse.morning.bloodSugar + ' mg/dl' : '--'}`;
                     target.classList.remove('lazyLoading');
                     target.classList.add('editable');
                 }
                 if (target.dataset.type.includes('evening')) {
                     const insertBloodSugarResponse = await createDiaryData(formattedDate, '', '', input.value, '', '');
-                    target.innerHTML = `<i class="fa-solid fa-droplet w-[14px]"></i> : ${
-                        insertBloodSugarResponse.evening.bloodSugar
-                            ? `<span class="${(function () {
-                                  if (insertBloodSugarResponse.evening.bloodSugar > 400) {
-                                      return 'text-red-600';
-                                  }
-                                  if (insertBloodSugarResponse.evening.bloodSugar > 250) {
-                                      return 'text-amber-500';
-                                  }
-                                  return 'text-green-500';
-                              })()}">${insertBloodSugarResponse.evening.bloodSugar}</span>` + ' mg/dl'
-                            : '--'
-                    }`;
+                    target.classList.remove('bg-white', 'bg-amber-100', 'bg-green-100', 'bg-red-100');
+                    target.classList.add(bloodSugarBGColor(insertBloodSugarResponse.evening.bloodSugar), 'aaa');
+                    target.innerHTML = `<i class="fa-solid fa-droplet w-[14px]"></i> : ${insertBloodSugarResponse.evening.bloodSugar ? insertBloodSugarResponse.evening.bloodSugar + ' mg/dl' : '--'}`;
                     target.classList.remove('lazyLoading');
                     target.classList.add('editable');
                 }
@@ -398,7 +357,6 @@ function cellClick(e, year, month, date) {
             input.addEventListener('keydown', function (event) {
                 if (event.key === 'Enter') {
                     input.blur();
-                    // input.dispatchEvent(new Event('blur'));
                 }
             });
         }
@@ -440,6 +398,8 @@ document.querySelector('#addSugarField').addEventListener('click', () => {
 function openQuickRecordWindow() {
     document.querySelector('#quickRecordSuagr').value = '';
     document.querySelector('#quickRecordInsulin').value = 0;
+    document.querySelector('#quickRecordTime').value = '10:00';
+    document.querySelector('#quickRecordDate').value = new Date().toISOString().split('T')[0];
     document.querySelector('#quickRecordFade').style.display = 'flex';
 }
 function openCreateWeightWindow() {
@@ -466,12 +426,14 @@ function openCreateSugarCurveWindow() {
         <button class="bg-blue-500 hover:bg-blue-400 text-white py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="submitSugarCurve(event,'${formattedDate}')">確定</button>`;
     document.querySelector('#sugarCurvefade').style.display = 'flex';
 }
-/////////////////////
 async function submitQuickRecord(e) {
     const quickRecordSuagr = document.querySelector('#quickRecordSuagr').value;
     const quickRecordInsulin = document.querySelector('#quickRecordInsulin').value;
-    if (!quickRecordSuagr || !quickRecordInsulin) {
-        alert('請輸入完整資訊');
+    const quickRecordDate = document.querySelector('#quickRecordDate').value;
+    const quickRecordTime = document.querySelector('#quickRecordTime').value;
+    const quickTime = document.querySelector('input[name=quickTime]:checked')?.value;
+    if (!quickRecordSuagr || !quickRecordInsulin || !quickRecordDate || !quickRecordTime || !quickTime) {
+        showToast('請輸入完整資訊', 'error');
         return;
     }
     e.target.classList.add('submitLoading');
@@ -481,22 +443,26 @@ async function submitQuickRecord(e) {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}`;
-    if (date.getHours() < 14) {
+    if (quickTime == 'morning') {
         morningBloodSugar = document.querySelector('#quickRecordSuagr').value;
         morningInsulin = document.querySelector('#quickRecordInsulin').value;
         eveningBloodSugar = '';
         eveningInsulin = '';
-    } else {
+        morningTime = quickRecordTime;
+        eveningTime = '';
+    } else if (quickTime == 'evening') {
         morningBloodSugar = '';
         morningInsulin = '';
         eveningBloodSugar = document.querySelector('#quickRecordSuagr').value;
         eveningInsulin = document.querySelector('#quickRecordInsulin').value;
+        eveningTime = quickRecordTime;
+        morningTime = '';
     }
-    const createQuickRecordResponse = await createDiaryData(formattedDate, morningBloodSugar, morningInsulin, eveningBloodSugar, eveningInsulin, '');
+    const createQuickRecordResponse = await createDiaryData(quickRecordDate, morningBloodSugar, morningInsulin, eveningBloodSugar, eveningInsulin, '', morningTime, eveningTime);
     e.target.classList.remove('submitLoading');
     e.target.disabled = false;
-    if (!createQuickRecordResponse._id) {
-        alert('新增失敗');
+    if (!createQuickRecordResponse?._id) {
+        showToast('新增失敗', error);
         return;
     }
     document.querySelector('#quickRecordFade').style.display = 'none';
@@ -509,39 +475,15 @@ async function submitQuickRecord(e) {
     document.querySelector(`#calendar${formattedDate}`).innerHTML = `
         <div class="font-bold text-xl text-center">${todayData.date}</div>
         <!-- 早上 -->
-        <div class="bg-orange-100 p-2 rounded-md mb-2 hover:bg-orange-200">
-            <div class="font-semibold text-orange-500 text-center"><i class="fa-regular fa-sun"></i></div>
-            <div data-type="morningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${todayData.year},${todayData.month},${todayData.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${
-        todayData.morning.bloodSugar
-            ? `<span class="${(function () {
-                  if (todayData.morning.bloodSugar > 400) {
-                      return 'text-red-500';
-                  }
-                  if (todayData.morning.bloodSugar > 250) {
-                      return 'text-amber-500';
-                  }
-                  return 'text-green-500';
-              })()}">${todayData.morning.bloodSugar}</span>` + ' mg/dl'
-            : '--'
-    }</div>
+        <div class="bg-blue-100 p-2 rounded-md mb-2 hover:bg-blue-200">
+            <div class="font-semibold text-blue-900 text-center"><i class="fa-regular fa-sun"></i> ${todayData.morning.time}</div>
+            <div data-type="morningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none ${bloodSugarBGColor(todayData.morning.bloodSugar)}" onclick="cellClick(event,${todayData.year},${todayData.month},${todayData.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${todayData.morning.bloodSugar ? todayData.morning.bloodSugar + ' mg/dl' : '--'}</div>
         <div data-type="morningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${todayData.year},${todayData.month},${todayData.date})"><i class="fa-solid fa-syringe"></i> : ${todayData.morning.insulin === '' ? '--' : todayData.morning.insulin + '小格'}</div>
         </div>
         <!-- 晚上 -->
-        <div class="bg-purple-100 p-2 rounded-md hover:bg-purple-200">
-            <div class="font-semibold text-purple-500 text-center"><i class="fa-regular fa-moon"></i></div>
-            <div data-type="eveningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${todayData.year},${todayData.month},${todayData.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${
-        todayData.evening.bloodSugar
-            ? `<span class="${(function () {
-                  if (todayData.evening.bloodSugar > 400) {
-                      return 'text-red-600';
-                  }
-                  if (todayData.evening.bloodSugar > 250) {
-                      return 'text-amber-500';
-                  }
-                  return 'text-green-500';
-              })()}">${todayData.evening.bloodSugar}</span>` + ' mg/dl'
-            : '--'
-    }</div>
+        <div class="bg-blue-100 p-2 rounded-md mb-2 hover:bg-blue-200">
+            <div class="font-semibold text-blue-900 text-center"><i class="fa-regular fa-moon"></i> ${todayData.evening.time}</div>
+            <div data-type="eveningBloodSugar" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none ${bloodSugarBGColor(todayData.evening.bloodSugar)}" onclick="cellClick(event,${todayData.year},${todayData.month},${todayData.date})"><i class="fa-solid fa-droplet w-[14px]"></i> : ${todayData.evening.bloodSugar ? todayData.evening.bloodSugar + ' mg/dl' : '--'}</div>
         <div data-type="eveningInsulin" class="editable p-1 text-sm mt-1 bg-white border border-gray-300 rounded w-full select-none" onclick="cellClick(event,${todayData.year},${todayData.month},${todayData.date})"><i class="fa-solid fa-syringe"></i> : ${todayData.evening.insulin === '' ? '--' : todayData.evening.insulin + '小格'}</div>
     </div>`;
 
@@ -552,7 +494,7 @@ async function submitWeight(e) {
     const date = document.querySelector('#weightDate').value;
     const weight = document.querySelector('#weightValue').value;
     if (!date || !weight) {
-        alert('請輸入完整資訊');
+        showToast('請輸入完整資訊', 'error');
         return;
     }
     e.target.classList.add('submitLoading');
@@ -561,7 +503,7 @@ async function submitWeight(e) {
     e.target.classList.remove('submitLoading');
     e.target.disabled = false;
     if (!createWeightResponse._id) {
-        alert('體重新增失敗');
+        showToast('體重新增失敗', 'error');
         return;
     }
     document.querySelector('#weightFade').style.display = 'none';
@@ -583,7 +525,7 @@ async function submitSugarCurve(e, date) {
         sugarArray.push(x.value);
     });
     if (!year || !month || !day || timeArray.includes('') || sugarArray.includes('')) {
-        alert('請輸入完整資訊');
+        showToast('請輸入完整資訊', 'error');
         return;
     }
     e.target.classList.add('submitLoading');
@@ -597,7 +539,7 @@ async function submitSugarCurve(e, date) {
     e.target.classList.remove('submitLoading');
     e.target.disabled = false;
     if (!createSugarCurveResponse._id) {
-        alert('新增失敗');
+        showToast('新增失敗', 'error');
         return;
     }
     await updateCurrentMonthSugarChart();
@@ -620,7 +562,7 @@ async function getAnimalProfile() {
         const data = await response.json();
         return data;
     } catch (error) {
-        alert('伺服器忙碌中，請稍後再試。');
+        showToast('伺服器忙碌中，請稍後再試。', 'error');
         console.error('getAnimalProfile', error);
         throw error;
     }
@@ -636,7 +578,7 @@ async function getAnimalWeight() {
         const data = await response.json();
         return data;
     } catch (error) {
-        alert('伺服器忙碌中，請稍後再試。');
+        showToast('伺服器忙碌中，請稍後再試。', 'error');
         console.error('getAnimalWeight', error);
         throw error;
     }
@@ -650,9 +592,10 @@ async function getDiaryData() {
             throw new Error(`Request failed with status: ${response.status}`);
         }
         const data = await response.json();
+        console.log(data);
         return data;
     } catch (error) {
-        alert('伺服器忙碌中，請稍後再試。');
+        showToast('伺服器忙碌中，請稍後再試。', 'error');
         console.error('getDiaryData', error);
         throw error;
     }
@@ -668,12 +611,12 @@ async function getBloodSugarCurve() {
         const data = await response.json();
         return data;
     } catch (error) {
-        alert('伺服器忙碌中，請稍後再試。');
+        showToast('伺服器忙碌中，請稍後再試。', 'error');
         console.error('getBloodSugarCurve', error);
         throw error;
     }
 }
-async function createDiaryData(date, morningBloodSugar, morningInsulin, eveningBloodSugar, eveningInsulin, notes) {
+async function createDiaryData(date, morningBloodSugar, morningInsulin, eveningBloodSugar, eveningInsulin, notes, morningTime = '', eveningTime = '') {
     try {
         const response = await fetch(`${apipath}/bloodSugar/create`, {
             method: 'POST',
@@ -684,10 +627,12 @@ async function createDiaryData(date, morningBloodSugar, morningInsulin, eveningB
                 userId: animalId,
                 date,
                 morning: {
+                    time: morningTime,
                     bloodSugar: morningBloodSugar,
                     insulin: morningInsulin,
                 },
                 evening: {
+                    time: eveningTime,
                     bloodSugar: eveningBloodSugar,
                     insulin: eveningInsulin,
                 },
@@ -698,9 +643,10 @@ async function createDiaryData(date, morningBloodSugar, morningInsulin, eveningB
             throw new Error(`Request failed with status: ${response.status}`);
         }
         const data = await response.json();
+        showToast('新增成功');
         return data;
     } catch (error) {
-        alert('伺服器忙碌中，請稍後再試。');
+        showToast('伺服器忙碌中，請稍後再試。', 'error');
         console.error('createDiaryData', error);
         throw error;
     }
@@ -724,7 +670,7 @@ async function createWeight(date, weight) {
         const data = await response.json();
         return data;
     } catch (error) {
-        alert('伺服器忙碌中，請稍後再試。');
+        showToast('伺服器忙碌中，請稍後再試。', 'error');
         console.error('createDiaryData', error);
         throw error;
     }
@@ -748,7 +694,7 @@ async function createSugarCurve(date, records) {
         const data = await response.json();
         return data;
     } catch (error) {
-        alert('伺服器忙碌中，請稍後再試。');
+        showToast('伺服器忙碌中，請稍後再試。', 'error');
         console.error('createDiaryData', error);
         throw error;
     }
@@ -786,3 +732,27 @@ function isToday(dateString) {
 }
 // TODO
 // 1.快速新增只更新當天卡片
+
+function bloodSugarBGColor(value) {
+    if (value === undefined || value === null || value === '') {
+        return 'bg-white';
+    }
+    if (value >= 400) {
+        return 'bg-red-100';
+    }
+    if (value >= 250) {
+        return 'bg-amber-100';
+    }
+    return 'bg-green-100';
+}
+
+function showToast(message, type = 'success') {
+    const container = document.querySelector('#toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.remove();
+    }, 4000);
+}

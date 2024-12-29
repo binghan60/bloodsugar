@@ -55,6 +55,55 @@
                 background: #3b82f6;
             }
         }
+        /* Toast 容器 */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+        }
+
+        /* Toast 基本樣式 */
+        .toast {
+            min-width: 200px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            text-align: center;
+            color: white;
+            animation: fade-in 4s ease-in-out forwards;
+            margin: 10px 0;
+        }
+
+        /* Success 樣式 */
+        .toast.success {
+            background-color: #4caf50;
+        }
+        .toast.error {
+            background-color: #ff5252;
+        }
+
+        /* 進出場動畫 */
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
     </style>
     <body class="bg-blue-300 text-base">
         <div class="container mx-auto p-3 lg:p-4">
@@ -125,6 +174,16 @@
                 <h2 class="text-xl font-semibold mb-2 text-gray-800">快速記錄</h2>
                 <div class="space-y-4 mb-6">
                     <div class="grid grid-cols-2 gap-4 items-center border p-2 rounded-md shadow-md">
+                        <label for="quickmorning" class="w-full rounded-lg">
+                            <input id="quickmorning" type="radio" type="radio" name="quickTime" class="hidden peer" value="morning" />
+                            <span class="px-2 py-1.5 w-full transition-all rounded-lg shadow-md cursor-pointer lg:px-3 text-blue-800 bg-blue-100 peer-checked:bg-blue-500 peer-checked:text-white">早上</span>
+                        </label>
+                        <label for="quickevening" class="w-full rounded-lg">
+                            <input id="quickevening" type="radio" type="radio" name="quickTime" class="hidden peer" value="evening" />
+                            <span class="px-2 py-1.5 w-full transition-all rounded-lg shadow-md cursor-pointer lg:px-3 text-blue-800 bg-blue-100 peer-checked:bg-blue-500 peer-checked:text-white">晚上</span>
+                        </label>
+                        <input id="quickRecordDate" type="date" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
+                        <input id="quickRecordTime" type="time" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
                         <input id="quickRecordSuagr" placeholder="請輸入血糖值" type="tel" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
                         <select id="quickRecordInsulin" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
                             <option value="0">0小格</option>
@@ -163,6 +222,7 @@
                 <h2 class="text-xl font-semibold mb-2 text-gray-800">建立血糖曲線</h2>
                 <fieldset class="grid grid-cols-3 gap-4 items-center border p-2 rounded-md shadow-md mb-5">
                     <legend><h2>日期</h2></legend>
+
                     <input id="sugarCurveYear" type="tel" placeholder="血糖曲線年" class="block w-full p-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
                     <input id="sugarCurveMonth" type="tel" placeholder="血糖曲線月" class="block w-full p-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
                     <input id="sugarCurveDay" type="tel" placeholder="血糖曲線日" class="block w-full p-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
@@ -194,6 +254,7 @@
                 <i class="fa-solid fa-chart-line"></i>
             </button>
         </div>
+        <div id="toast-container" class="toast-container"></div>
         <script src="js/script.js"></script>
     </body>
 </html>
