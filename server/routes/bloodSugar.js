@@ -41,11 +41,17 @@ router.post('/create', async (req, res) => {
             if (morning.insulin !== undefined && morning.insulin !== '') {
                 updateFields['morning.insulin'] = morning.insulin;
             }
+            if (morning.time !== undefined && morning.time !== '') {
+                updateFields['morning.time'] = morning.time;
+            }
             if (evening.bloodSugar !== undefined && evening.bloodSugar !== '') {
                 updateFields['evening.bloodSugar'] = evening.bloodSugar;
             }
             if (evening.insulin !== undefined && evening.insulin !== '') {
                 updateFields['evening.insulin'] = evening.insulin;
+            }
+            if (evening.time !== undefined && evening.time !== '') {
+                updateFields['evening.time'] = evening.time;
             }
             if (notes !== undefined && notes !== '') {
                 updateFields['notes'] = notes;
@@ -69,12 +75,14 @@ router.post('/create', async (req, res) => {
             date: new Date(date),
             morning: morning
                 ? {
+                      time: morning.time,
                       bloodSugar: morning.bloodSugar,
                       insulin: morning.insulin,
                   }
                 : undefined,
             evening: evening
                 ? {
+                      time: evening.time,
                       bloodSugar: evening.bloodSugar,
                       insulin: evening.insulin,
                   }
