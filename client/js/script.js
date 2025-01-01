@@ -398,7 +398,10 @@ document.querySelector('#addSugarField').addEventListener('click', () => {
 function openQuickRecordWindow() {
     document.querySelector('#quickRecordSuagr').value = '';
     document.querySelector('#quickRecordInsulin').value = 0;
-    document.querySelector('#quickRecordTime').value = '10:00';
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    document.querySelector('#quickRecordTime').value = `${hours}:${minutes}`;
     document.querySelector('#quickRecordDate').value = new Date().toISOString().split('T')[0];
     document.querySelector('#quickRecordFade').style.display = 'flex';
 }
