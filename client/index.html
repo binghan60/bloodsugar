@@ -176,12 +176,12 @@
                 <div class="space-y-4 mb-6">
                     <div class="grid grid-cols-2 gap-4 items-center border p-2 rounded-md shadow-md">
                         <label for="quickmorning" class="w-full rounded-lg">
-                            <input id="quickmorning" type="radio" type="radio" name="quickTime" class="hidden peer" value="morning" />
-                            <span class="px-2 py-1.5 w-full transition-all rounded-lg shadow-md cursor-pointer lg:px-3 text-blue-800 bg-blue-100 peer-checked:bg-blue-500 peer-checked:text-white">早上</span>
+                            <input id="quickmorning" type="radio" type="radio" name="quickTime" class="hidden peer" value="morning" checked />
+                            <span class="block px-2 py-1.5 w-full transition-all rounded-lg shadow-md cursor-pointer lg:px-3 text-blue-800 bg-blue-100 peer-checked:bg-blue-500 peer-checked:text-white">早上</span>
                         </label>
                         <label for="quickevening" class="w-full rounded-lg">
                             <input id="quickevening" type="radio" type="radio" name="quickTime" class="hidden peer" value="evening" />
-                            <span class="px-2 py-1.5 w-full transition-all rounded-lg shadow-md cursor-pointer lg:px-3 text-blue-800 bg-blue-100 peer-checked:bg-blue-500 peer-checked:text-white">晚上</span>
+                            <span class="block px-2 py-1.5 w-full transition-all rounded-lg shadow-md cursor-pointer lg:px-3 text-blue-800 bg-blue-100 peer-checked:bg-blue-500 peer-checked:text-white">晚上</span>
                         </label>
                         <input id="quickRecordDate" type="date" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
                         <input id="quickRecordTime" type="time" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
@@ -221,20 +221,19 @@
         <div id="sugarCurvefade" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-20">
             <div class="bg-white p-4 lg:p-8 rounded-xl shadow-2xl text-center w-[80%] max-w-2xl">
                 <h2 class="text-xl font-semibold mb-2 text-gray-800">建立血糖曲線</h2>
-                <fieldset class="grid grid-cols-3 gap-4 items-center border p-2 rounded-md shadow-md mb-5">
-                    <legend><h2>日期</h2></legend>
 
-                    <input id="sugarCurveYear" type="tel" placeholder="血糖曲線年" class="block w-full p-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
-                    <input id="sugarCurveMonth" type="tel" placeholder="血糖曲線月" class="block w-full p-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
-                    <input id="sugarCurveDay" type="tel" placeholder="血糖曲線日" class="block w-full p-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
-                </fieldset>
-                <div class="space-y-4 mb-6" id="sugarCurveinputContainer">
-                    <div class="grid grid-cols-[2fr_2fr_0.5fr] gap-4 items-center border p-2 rounded-md shadow-md">
-                        <input type="time" name="sugarCurveTime" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
-                        <input type="number" name="sugarCurveBloodSugar" placeholder="血糖" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
-                        <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md">X</button>
+                <fieldset class="border p-2 rounded-md shadow-md mb-5">
+                    <legend><h2>日期</h2></legend>
+                    <input id="sugarCurveDate" type="date" name="sugarCurveDate" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
+                    <div class="space-y-4 my-4" id="sugarCurveinputContainer">
+                        <div class="grid grid-cols-[2fr_2fr_0.5fr] gap-4 items-center border p-2 rounded-md shadow-md">
+                            <input type="time" name="sugarCurveTime" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
+                            <input type="number" name="sugarCurveBloodSugar" placeholder="血糖" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
+                            <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md" onclick="removeElement(this)">X</button>
+                        </div>
                     </div>
-                </div>
+                </fieldset>
+
                 <div class="flex justify-center mb-6">
                     <button id="addSugarField" class="bg-green-500 hover:bg-green-400 text-white font-medium py-2 px-6 rounded-lg flex items-center shadow-md transition-all"><i class="fa-solid fa-plus mr-2"></i> 新增欄位</button>
                 </div>

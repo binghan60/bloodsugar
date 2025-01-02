@@ -421,9 +421,8 @@ function openCreateSugarCurveWindow() {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}`;
-    document.querySelector('#sugarCurveYear').value = year;
-    document.querySelector('#sugarCurveMonth').value = month;
-    document.querySelector('#sugarCurveDay').value = day;
+    document.querySelector('#sugarCurveDate').value = formattedDate;
+
     document.querySelector('#sugarCurveBtn').innerHTML = `
         <button class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="document.querySelector('#sugarCurvefade').style.display='none'">取消</button>
         <button class="bg-blue-500 hover:bg-blue-400 text-white py-2 px-6 rounded-lg shadow-md w-1/3 transition-all" onclick="submitSugarCurve(event,'${formattedDate}')">確定</button>`;
@@ -511,6 +510,7 @@ async function submitWeight(e) {
     }
     document.querySelector('#weightFade').style.display = 'none';
     updateWightChart();
+    showToast('新增成功');
     if (isToday(date)) {
         updateProfile();
     }
@@ -518,9 +518,11 @@ async function submitWeight(e) {
 async function submitSugarCurve(e, date) {
     let timeArray = [];
     let sugarArray = [];
-    const year = document.querySelector('#sugarCurveYear').value;
-    const month = document.querySelector('#sugarCurveMonth').value;
-    const day = document.querySelector('#sugarCurveDay').value;
+    const sugarCurveDate = document.querySelector('#sugarCurveDate').value;
+    console.log(sugarCurveDate);
+    const year = sugarCurveDate.split('-')[0];
+    const month = sugarCurveDate.split('-')[1];
+    const day = sugarCurveDate.split('-')[2];
     document.querySelectorAll('input[name=sugarCurveTime]').forEach((x) => {
         timeArray.push(x.value);
     });
@@ -552,6 +554,7 @@ async function submitSugarCurve(e, date) {
             <input type="number" name="sugarCurveBloodSugar" placeholder="血糖" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
             <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md">X</button>
         </div>`;
+    showToast('新增成功');
     document.querySelector('#sugarCurvefade').style.display = 'none';
 }
 async function getAnimalProfile() {
@@ -758,4 +761,9 @@ function showToast(message, type = 'success') {
     setTimeout(() => {
         toast.remove();
     }, 4000);
+}
+
+function removeElement(button) {
+    const parentDiv = button.parentElement;
+    parentDiv.remove();
 }
