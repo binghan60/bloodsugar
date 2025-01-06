@@ -106,9 +106,9 @@
             }
         }
     </style>
-    <body class="bg-blue-300 text-base">
+    <body class="bg-blue-100 text-base">
         <div class="container mx-auto p-3 lg:p-4">
-            <div class="grid md:grid-cols-3 gap-4 lg:h-[350px]">
+            <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-4 lg:h-[350px]">
                 <div class="rounded-lg overflow-hidden shadow-lg bg-white h-full">
                     <img class="w-full h-full object-cover" src="image/avatar.png" alt="" />
                 </div>
@@ -136,8 +136,11 @@
                     </div>
                 </div>
 
-                <div class="grid-cols-1 rounded-lg overflow-hidden shadow-lg bg-white p-2 lg:p-4 h-full min-h-[300px]">
-                    <div id="weightChart" class="w-full h-full"></div>
+                <div class="rounded-lg overflow-hidden shadow-lg bg-white p-2 lg:p-4 h-full min-h-[300px]">
+                    <div id="weightChart" class="w-full h-full lazyLoading"></div>
+                </div>
+                <div id="statisticsForm" class="grid grid-cols-6 rounded-lg overflow-hidden shadow-lg bg-white p-2 lg:p-4 h-full min-h-[300px]">
+                    <div class="col-span-6 w-full h-full lazyLoading"></div>
                 </div>
             </div>
             <!-- 日曆 -->
@@ -175,14 +178,6 @@
                 <h2 class="text-xl font-semibold mb-2 text-gray-800">快速記錄</h2>
                 <div class="space-y-4 mb-6">
                     <div class="grid grid-cols-2 gap-4 items-center border p-2 rounded-md shadow-md">
-                        <label for="quickmorning" class="w-full rounded-lg">
-                            <input id="quickmorning" type="radio" type="radio" name="quickTime" class="hidden peer" value="morning" checked />
-                            <span class="block px-2 py-1.5 w-full transition-all rounded-lg shadow-md cursor-pointer lg:px-3 text-blue-800 bg-blue-100 peer-checked:bg-blue-500 peer-checked:text-white">早上</span>
-                        </label>
-                        <label for="quickevening" class="w-full rounded-lg">
-                            <input id="quickevening" type="radio" type="radio" name="quickTime" class="hidden peer" value="evening" />
-                            <span class="block px-2 py-1.5 w-full transition-all rounded-lg shadow-md cursor-pointer lg:px-3 text-blue-800 bg-blue-100 peer-checked:bg-blue-500 peer-checked:text-white">晚上</span>
-                        </label>
                         <input id="quickRecordDate" type="date" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
                         <input id="quickRecordTime" type="time" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
                         <input id="quickRecordSuagr" placeholder="請輸入血糖值" type="tel" class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" autocomplete="off" />
