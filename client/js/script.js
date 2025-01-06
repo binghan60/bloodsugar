@@ -10,10 +10,10 @@ const currentDate = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await updateProfile();
-    await updateWightChart();
-    await updateStatisticsForm();
-    await updateCalendar();
+    updateProfile();
+    updateWightChart();
+    updateStatisticsForm();
+    updateCalendar();
 });
 async function updateProfile() {
     document.querySelector('#profileCard').innerHTML = '';
