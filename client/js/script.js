@@ -653,7 +653,7 @@ async function getAnimalWeight() {
 }
 async function getStatistics() {
     try {
-        const response = await fetch(`http://localhost:3000/bloodSugar/statistics?animalId=${animalId}&start=${currentDate.year}-${currentDate.month + 1}-1&end=${currentDate.year}-${currentDate.month + 1}-${currentDate.dayInMonth}`);
+        const response = await fetch(`${apipath}/bloodSugar/statistics?animalId=${animalId}&start=${currentDate.year}-${currentDate.month + 1}-1&end=${currentDate.year}-${currentDate.month + 1}-${currentDate.dayInMonth}`);
         if (!response.ok) {
             throw new Error(`Request failed with status: ${response.status}`);
         }
